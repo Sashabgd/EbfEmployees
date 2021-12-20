@@ -1,5 +1,6 @@
 package com.itekako.EbfEmployees.controllers;
 
+import com.itekako.EbfEmployees.Dtos.CreateCompanyRequest;
 import com.itekako.EbfEmployees.database.repositories.CompaniesRepository;
 import com.itekako.EbfEmployees.exceptions.ResourceNotFoundException;
 import com.itekako.EbfEmployees.services.CompanyService;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 
@@ -28,5 +30,14 @@ public class CompanyController {
     @GetMapping("/{id}/employees")
     public ResponseEntity getAllEmployeesForCompany(@Valid @PathVariable("id") Long id, Pageable pageable) throws ResourceNotFoundException {
         return ResponseEntity.ok(companyService.getAllEmployeesForCompany(id, pageable));
+    }
+
+    @PostMapping
+    public ResponseEntity createCompany(@RequestBody CreateCompanyRequest createCompanyRequest){
+        return ResponseEntity.created(ServletUriComponentsBuilder.
+                fromCurrentRequest().
+                path("/api/companies/{id}").
+                buildAndExpand(companyService.createCompany(createCompanyRequest)).
+                toUri()).build();
     }
 }

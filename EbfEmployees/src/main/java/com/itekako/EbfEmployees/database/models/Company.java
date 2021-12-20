@@ -3,10 +3,9 @@ package com.itekako.EbfEmployees.database.models;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.Generated;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -15,6 +14,7 @@ import javax.persistence.Table;
 @Table(name = "companies",schema = "public")
 public class Company {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
 }
