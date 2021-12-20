@@ -24,6 +24,7 @@ public class Employee {
 
     private String surname;
 
+    @Column(unique = true)
     private String email;
 
     private String address;
