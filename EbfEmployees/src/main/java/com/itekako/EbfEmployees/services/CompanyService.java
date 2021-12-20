@@ -18,4 +18,6 @@ public interface CompanyService {
     Company updateCompany(Long id, CompanyDetails companyDetails) throws ResourceNotFoundException;
 
     void deleteCompany(Long id) throws ResourceNotFoundException;
+
+    Page<Company> getAllCompanies(Pageable pageable);
 }

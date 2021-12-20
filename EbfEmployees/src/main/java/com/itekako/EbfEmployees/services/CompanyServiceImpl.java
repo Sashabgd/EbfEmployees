@@ -82,4 +82,11 @@ public class CompanyServiceImpl implements CompanyService{
         }
         companiesRepository.delete(company.get());
     }
+
+    @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    @Retryable(value = CannotAcquireLockException.class,backoff = @Backoff(delay = 100),maxAttempts = 15)
+    public Page<Company> getAllCompanies(Pageable pageable) {
+        return companiesRepository.findAll(pageable);
+    }
 }

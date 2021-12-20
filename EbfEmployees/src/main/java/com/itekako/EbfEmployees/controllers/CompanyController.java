@@ -19,13 +19,11 @@ import javax.validation.Valid;
 @RequestMapping(value = "/api/companies",produces = MediaType.APPLICATION_JSON_VALUE)
 @Data
 public class CompanyController {
-
-    private final CompaniesRepository companiesRepository;
     private final CompanyService companyService;
 
     @GetMapping
     public ResponseEntity getAllCompanies(Pageable pageable){
-        return ResponseEntity.ok(companiesRepository.findAll(pageable));
+        return ResponseEntity.ok(companyService.getAllCompanies(pageable));
     }
 
     @GetMapping("/{id}/employees")
