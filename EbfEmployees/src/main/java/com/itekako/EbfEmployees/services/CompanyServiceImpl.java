@@ -32,7 +32,7 @@ public class CompanyServiceImpl implements CompanyService{
     public Page<Employee> getAllEmployeesForCompany(long companyId, Pageable pageable) throws ResourceNotFoundException {
         Optional<Company> company = companiesRepository.findById(companyId);
         if(company.isEmpty()){
-            throw new ResourceNotFoundException(String.format("Company with id $o does not exist!",companyId));
+            throw new ResourceNotFoundException(String.format("Company with id %o does not exist!",companyId));
         }
         Page<Employee> employees = employeesRepository.findAllEmployeesByCompany(company.get(),pageable);
         return employees;
@@ -54,7 +54,7 @@ public class CompanyServiceImpl implements CompanyService{
     public Company getCompany(Long id) throws ResourceNotFoundException {
         Optional<Company> company = companiesRepository.findById(id);
         if(company.isEmpty()){
-            throw new ResourceNotFoundException(String.format("Company with id $o does not exist!",id));
+            throw new ResourceNotFoundException(String.format("Company with id %o does not exist!",id));
         }
         return company.get();
     }
@@ -65,7 +65,7 @@ public class CompanyServiceImpl implements CompanyService{
     public Company updateCompany(Long id, CompanyDetails companyDetails) throws ResourceNotFoundException {
         Optional<Company> company = companiesRepository.findById(id);
         if(company.isEmpty()){
-            throw new ResourceNotFoundException(String.format("Company with id $o does not exist!",id));
+            throw new ResourceNotFoundException(String.format("Company with id %o does not exist!",id));
         }
         company.get().setName(companyDetails.getName());
         companiesRepository.save(company.get());
@@ -78,7 +78,7 @@ public class CompanyServiceImpl implements CompanyService{
     public void deleteCompany(Long id) throws ResourceNotFoundException {
         Optional<Company> company = companiesRepository.findById(id);
         if(company.isEmpty()){
-            throw new ResourceNotFoundException(String.format("Company with id $o does not exist!",id));
+            throw new ResourceNotFoundException(String.format("Company with id %o does not exist!",id));
         }
         companiesRepository.delete(company.get());
     }
