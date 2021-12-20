@@ -1,5 +1,6 @@
 package com.itekako.EbfEmployees.controllers;
 
+import com.itekako.EbfEmployees.Dtos.CompanyDetails;
 import com.itekako.EbfEmployees.Dtos.CreateCompanyRequest;
 import com.itekako.EbfEmployees.database.repositories.CompaniesRepository;
 import com.itekako.EbfEmployees.exceptions.ResourceNotFoundException;
@@ -45,4 +46,10 @@ public class CompanyController {
     public ResponseEntity getCompanyById(@PathVariable("id") Long id) throws ResourceNotFoundException {
         return ResponseEntity.ok(companyService.getCompany(id));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity updateCompany(@PathVariable Long id,@Valid @RequestBody CompanyDetails companyDetails) throws ResourceNotFoundException {
+        return ResponseEntity.ok(companyService.updateCompany(id,companyDetails));
+    }
+
 }

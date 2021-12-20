@@ -1,5 +1,6 @@
 package com.itekako.EbfEmployees.services;
 
+import com.itekako.EbfEmployees.Dtos.CompanyDetails;
 import com.itekako.EbfEmployees.Dtos.CreateCompanyRequest;
 import com.itekako.EbfEmployees.database.models.Company;
 import com.itekako.EbfEmployees.database.models.Employee;
@@ -55,6 +56,19 @@ public class CompanyServiceImpl implements CompanyService{
         if(company.isEmpty()){
             throw new ResourceNotFoundException(String.format("Company with id $o does not exist!",id));
         }
+        return company.get();
+    }
+
+    @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Retryable(value = CannotAcquireLockException.class,backoff = @Backoff(delay = 100),maxAttempts = 15)
+    public Company updateCompany(Long id, CompanyDetails companyDetails) throws ResourceNotFoundException {
+        Optional<Company> company = companiesRepository.findById(id);
+        if(company.isEmpty()){
+            throw new ResourceNotFoundException(String.format("Company with id $o does not exist!",id));
+        }
+        company.get().setName(companyDetails.getName());
+        companiesRepository.save(company.get());
         return company.get();
     }
 }

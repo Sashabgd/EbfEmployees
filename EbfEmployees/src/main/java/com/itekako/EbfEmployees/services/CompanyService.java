@@ -1,5 +1,6 @@
 package com.itekako.EbfEmployees.services;
 
+import com.itekako.EbfEmployees.Dtos.CompanyDetails;
 import com.itekako.EbfEmployees.Dtos.CreateCompanyRequest;
 import com.itekako.EbfEmployees.database.models.Company;
 import com.itekako.EbfEmployees.database.models.Employee;
@@ -13,4 +14,6 @@ public interface CompanyService {
     long createCompany(CreateCompanyRequest createCompanyRequest);
 
     Company getCompany(Long id) throws ResourceNotFoundException;
+
+    Company updateCompany(Long id, CompanyDetails companyDetails) throws ResourceNotFoundException;
 }
