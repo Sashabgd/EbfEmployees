@@ -52,4 +52,9 @@ public class CompanyController {
         return ResponseEntity.ok(companyService.updateCompany(id,companyDetails));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteCompany(@PathVariable Long id) throws ResourceNotFoundException {
+        companyService.deleteCompany(id);
+        return ResponseEntity.noContent().build();
+    }
 }

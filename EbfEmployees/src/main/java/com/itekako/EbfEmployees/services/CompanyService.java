@@ -16,4 +16,6 @@ public interface CompanyService {
     Company getCompany(Long id) throws ResourceNotFoundException;
 
     Company updateCompany(Long id, CompanyDetails companyDetails) throws ResourceNotFoundException;
+
+    void deleteCompany(Long id) throws ResourceNotFoundException;
 }

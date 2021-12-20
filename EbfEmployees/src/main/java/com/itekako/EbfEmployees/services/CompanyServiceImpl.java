@@ -71,4 +71,15 @@ public class CompanyServiceImpl implements CompanyService{
         companiesRepository.save(company.get());
         return company.get();
     }
+
+    @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Retryable(value = CannotAcquireLockException.class,backoff = @Backoff(delay = 100),maxAttempts = 15)
+    public void deleteCompany(Long id) throws ResourceNotFoundException {
+        Optional<Company> company = companiesRepository.findById(id);
+        if(company.isEmpty()){
+            throw new ResourceNotFoundException(String.format("Company with id $o does not exist!",id));
+        }
+        companiesRepository.delete(company.get());
+    }
 }
