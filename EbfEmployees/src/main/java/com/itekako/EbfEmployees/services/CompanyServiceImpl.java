@@ -37,4 +37,13 @@ public class CompanyServiceImpl implements CompanyService{
         companiesRepository.save(company);
         return company.getId();
     }
+
+    @Override
+    public Company getCompany(Long id) throws ResourceNotFoundException {
+        Optional<Company> company = companiesRepository.findById(id);
+        if(company.isEmpty()){
+            throw new ResourceNotFoundException(String.format("Company with id $o does not exist!",id));
+        }
+        return company.get();
+    }
 }

@@ -36,8 +36,13 @@ public class CompanyController {
     public ResponseEntity createCompany(@RequestBody CreateCompanyRequest createCompanyRequest){
         return ResponseEntity.created(ServletUriComponentsBuilder.
                 fromCurrentRequest().
-                path("/api/companies/{id}").
+                path("/{id}").
                 buildAndExpand(companyService.createCompany(createCompanyRequest)).
                 toUri()).build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity getCompanyById(@PathVariable("id") Long id) throws ResourceNotFoundException {
+        return ResponseEntity.ok(companyService.getCompany(id));
     }
 }
