@@ -7,9 +7,14 @@ import com.itekako.EbfEmployees.database.repositories.CompaniesRepository;
 import com.itekako.EbfEmployees.database.repositories.EmployeesRepository;
 import com.itekako.EbfEmployees.exceptions.ResourceNotFoundException;
 import lombok.Data;
+import org.springframework.dao.CannotAcquireLockException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -21,6 +26,8 @@ public class CompanyServiceImpl implements CompanyService{
     private final EmployeesRepository employeesRepository;
 
     @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    @Retryable(value = CannotAcquireLockException.class,backoff = @Backoff(delay = 100),maxAttempts = 15)
     public Page<Employee> getAllEmployeesForCompany(long companyId, Pageable pageable) throws ResourceNotFoundException {
         Optional<Company> company = companiesRepository.findById(companyId);
         if(company.isEmpty()){
@@ -31,6 +38,8 @@ public class CompanyServiceImpl implements CompanyService{
     }
 
     @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Retryable(value = CannotAcquireLockException.class,backoff = @Backoff(delay = 100),maxAttempts = 15)
     public long createCompany(CreateCompanyRequest createCompanyRequest) {
         Company company = new Company()
                 .setName(createCompanyRequest.getName());
@@ -39,6 +48,8 @@ public class CompanyServiceImpl implements CompanyService{
     }
 
     @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    @Retryable(value = CannotAcquireLockException.class,backoff = @Backoff(delay = 100),maxAttempts = 15)
     public Company getCompany(Long id) throws ResourceNotFoundException {
         Optional<Company> company = companiesRepository.findById(id);
         if(company.isEmpty()){
