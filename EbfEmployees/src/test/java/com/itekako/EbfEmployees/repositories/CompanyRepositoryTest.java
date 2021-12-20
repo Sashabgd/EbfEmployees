@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -20,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@DataJpaTest
 @ExtendWith(SpringExtension.class)
 public class CompanyRepositoryTest {
 
@@ -31,14 +32,12 @@ public class CompanyRepositoryTest {
     private EmployeesRepository employeesRepository;
 
     @Test
-    @Transactional
     public void findAllEmptyTest() {
         Page<Company> emptyResult = companiesRepository.findAll(Pageable.ofSize(10));
         Assert.assertEquals(0, emptyResult.getTotalElements());
     }
 
     @Test
-    @Transactional
     public void findAllPageSize() {
         for (int i = 0; i < 100; i++) {
             Company company = new Company()
@@ -51,7 +50,6 @@ public class CompanyRepositoryTest {
         Assert.assertEquals(10, result.getTotalPages());
     }
 
-    @Transactional
     @Test
     public void findAllCompanyEmployees() {
         Company company = new Company().setName("test");
@@ -71,7 +69,6 @@ public class CompanyRepositoryTest {
         Assert.assertEquals(11, companyEmployees.getNumberOfElements());
     }
 
-    @Transactional
     @Test
     public void findAllCompanyEmployeesOfAnotherCompany() {
         Company company = new Company().setName("test");
@@ -93,7 +90,6 @@ public class CompanyRepositoryTest {
         Assert.assertEquals(0, companyEmployees.getNumberOfElements());
     }
 
-    @Transactional
     @Test
     public void getCompanyById(){
         Company company = new Company()
@@ -104,7 +100,6 @@ public class CompanyRepositoryTest {
         Assert.assertEquals("test",res.get().getName());
     }
 
-    @Transactional
     @Test(expected = DataIntegrityViolationException.class)
     public void saveCompaniesWithSameName(){
         Company company = new Company().setName("test");

@@ -6,7 +6,6 @@ import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
-@EnableTransactionManagement
 @EnableRetry
 public class EbfEmployeesApplication {
 
