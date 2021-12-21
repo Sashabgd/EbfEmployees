@@ -63,6 +63,8 @@ public class EmployeeServiceImpl implements EmployeeService{
     }
 
     @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Retryable(value = CannotAcquireLockException.class, backoff = @Backoff(delay = 100), maxAttempts = 15)
     public Employee updateEmployee(Long employeeId, EmployeeDetails employeeDetails) throws ResourceNotFoundException {
         Optional<Employee> employee = employeesRepository.findById(employeeId);
         if (employee.isEmpty()) {
