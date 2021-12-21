@@ -1,5 +1,8 @@
 package com.itekako.EbfEmployees.controllers;
 
+import com.itekako.EbfEmployees.Dtos.CreateEmployeeRequest;
+import com.itekako.EbfEmployees.database.models.Employee;
+import com.itekako.EbfEmployees.exceptions.ResourceNotFoundException;
 import com.itekako.EbfEmployees.services.EmployeeService;
 import lombok.Data;
 import org.springdoc.api.annotations.ParameterObject;
@@ -7,10 +10,10 @@ import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 
@@ -25,5 +28,21 @@ public class EmployeeController {
     @PageableAsQueryParam
     public ResponseEntity getAllEmployees(@NotNull @ParameterObject Pageable pageable){
         return ResponseEntity.ok(employeeService.getAllEmployees(pageable));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity getEmployee(@PathVariable("id") Long id) throws ResourceNotFoundException {
+        return ResponseEntity.ok(employeeService.getEmployee(id));
+    }
+
+    @PostMapping
+    public ResponseEntity createEmployee(@Valid @RequestBody CreateEmployeeRequest createEmployeeRequest) throws ResourceNotFoundException {
+        Employee createdEmployee = employeeService.createEmployee(createEmployeeRequest);
+        return ResponseEntity.
+                created(ServletUriComponentsBuilder.
+                        fromCurrentRequest().
+                        path("/{id}").
+                        buildAndExpand(createdEmployee.
+                                getId()).toUri()).build();
     }
 }
