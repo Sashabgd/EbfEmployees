@@ -1,7 +1,6 @@
 package com.itekako.EbfEmployees.services;
 
 import com.itekako.EbfEmployees.Dtos.CompanyDetails;
-import com.itekako.EbfEmployees.Dtos.CreateCompanyRequest;
 import com.itekako.EbfEmployees.database.models.Company;
 import com.itekako.EbfEmployees.database.models.Employee;
 import com.itekako.EbfEmployees.database.repositories.CompaniesRepository;
@@ -41,7 +40,7 @@ public class CompanyServiceImpl implements CompanyService{
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
     @Retryable(value = CannotAcquireLockException.class,backoff = @Backoff(delay = 100),maxAttempts = 15)
-    public long createCompany(CreateCompanyRequest createCompanyRequest) {
+    public long createCompany(CompanyDetails createCompanyRequest) {
         Company company = new Company()
                 .setName(createCompanyRequest.getName());
         companiesRepository.save(company);

@@ -1,7 +1,6 @@
 package com.itekako.EbfEmployees.services;
 
 import com.itekako.EbfEmployees.Dtos.CompanyDetails;
-import com.itekako.EbfEmployees.Dtos.CreateCompanyRequest;
 import com.itekako.EbfEmployees.database.models.Company;
 import com.itekako.EbfEmployees.database.repositories.CompaniesRepository;
 import com.itekako.EbfEmployees.database.repositories.EmployeesRepository;
@@ -66,9 +65,9 @@ public class CompanyServiceTest {
 
     @Test
     public void createCompany(){
-        CreateCompanyRequest createCompanyRequest = new CreateCompanyRequest()
+        CompanyDetails companyDetails = new CompanyDetails()
                 .setName("testc");
-        companyService.createCompany(createCompanyRequest);
+        companyService.createCompany(companyDetails);
         ArgumentCaptor<Company> argumentCaptor = ArgumentCaptor.forClass(Company.class);
         verify(companiesRepository,times(1)).save(argumentCaptor.capture());
         Assert.assertEquals("testc",argumentCaptor.getValue().getName());

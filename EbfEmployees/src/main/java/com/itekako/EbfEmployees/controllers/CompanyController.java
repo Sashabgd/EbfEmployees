@@ -1,7 +1,6 @@
 package com.itekako.EbfEmployees.controllers;
 
 import com.itekako.EbfEmployees.Dtos.CompanyDetails;
-import com.itekako.EbfEmployees.Dtos.CreateCompanyRequest;
 import com.itekako.EbfEmployees.exceptions.ResourceNotFoundException;
 import com.itekako.EbfEmployees.services.CompanyService;
 import lombok.Data;
@@ -36,11 +35,11 @@ public class CompanyController {
     }
 
     @PostMapping
-    public ResponseEntity createCompany(@RequestBody CreateCompanyRequest createCompanyRequest){
+    public ResponseEntity createCompany(@RequestBody CompanyDetails companyDetails){
         return ResponseEntity.created(ServletUriComponentsBuilder.
                 fromCurrentRequest().
                 path("/{id}").
-                buildAndExpand(companyService.createCompany(createCompanyRequest)).
+                buildAndExpand(companyService.createCompany(companyDetails)).
                 toUri()).build();
     }
 
