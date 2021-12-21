@@ -1,6 +1,6 @@
 package com.itekako.EbfEmployees.services;
 
-import com.itekako.EbfEmployees.Dtos.CreateEmployeeRequest;
+import com.itekako.EbfEmployees.Dtos.EmployeeDetails;
 import com.itekako.EbfEmployees.database.models.Employee;
 import com.itekako.EbfEmployees.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
@@ -11,5 +11,7 @@ public interface EmployeeService {
 
     Employee getEmployee(Long id) throws ResourceNotFoundException;
 
-    Employee createEmployee(CreateEmployeeRequest createEmployeeRequest) throws ResourceNotFoundException;
+    Employee createEmployee(EmployeeDetails employeeDetails) throws ResourceNotFoundException;
+
+    Employee updateEmployee(Long employeeId, EmployeeDetails employeeDetails) throws ResourceNotFoundException;
 }

@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Accessors(chain = true)
-public class CreateEmployeeRequest {
+public class EmployeeDetails {
 
     @NotNull
     private long companyId;

@@ -1,6 +1,6 @@
 package com.itekako.EbfEmployees.controllers;
 
-import com.itekako.EbfEmployees.Dtos.CreateEmployeeRequest;
+import com.itekako.EbfEmployees.Dtos.EmployeeDetails;
 import com.itekako.EbfEmployees.database.models.Employee;
 import com.itekako.EbfEmployees.exceptions.ResourceNotFoundException;
 import com.itekako.EbfEmployees.services.EmployeeService;
@@ -36,13 +36,19 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity createEmployee(@Valid @RequestBody CreateEmployeeRequest createEmployeeRequest) throws ResourceNotFoundException {
-        Employee createdEmployee = employeeService.createEmployee(createEmployeeRequest);
+    public ResponseEntity createEmployee(@Valid @RequestBody EmployeeDetails employeeDetails) throws ResourceNotFoundException {
+        Employee createdEmployee = employeeService.createEmployee(employeeDetails);
         return ResponseEntity.
                 created(ServletUriComponentsBuilder.
                         fromCurrentRequest().
                         path("/{id}").
                         buildAndExpand(createdEmployee.
                                 getId()).toUri()).build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity updateEmployee(@PathVariable Long id, @Valid @RequestBody EmployeeDetails employeeDetails) throws ResourceNotFoundException {
+        Employee updatedEmployee = employeeService.updateEmployee(id, employeeDetails);
+        return ResponseEntity.ok(updatedEmployee);
     }
 }

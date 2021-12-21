@@ -1,6 +1,6 @@
 package com.itekako.EbfEmployees.services;
 
-import com.itekako.EbfEmployees.Dtos.CreateEmployeeRequest;
+import com.itekako.EbfEmployees.Dtos.EmployeeDetails;
 import com.itekako.EbfEmployees.database.models.Company;
 import com.itekako.EbfEmployees.database.models.Employee;
 import com.itekako.EbfEmployees.database.repositories.CompaniesRepository;
@@ -45,20 +45,43 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    @Retryable(value = CannotAcquireLockException.class,backoff = @Backoff(delay = 100),maxAttempts = 15)
-    public Employee createEmployee(CreateEmployeeRequest createEmployeeRequest) throws ResourceNotFoundException {
-        Optional<Company> company = companiesRepository.findById(createEmployeeRequest.getCompanyId());
-        if(company.isEmpty()){
-            throw new ResourceNotFoundException(String.format("Company with id %o does not exist!",createEmployeeRequest.getCompanyId()));
+    @Retryable(value = CannotAcquireLockException.class, backoff = @Backoff(delay = 100), maxAttempts = 15)
+    public Employee createEmployee(EmployeeDetails employeeDetails) throws ResourceNotFoundException {
+        Optional<Company> company = companiesRepository.findById(employeeDetails.getCompanyId());
+        if (company.isEmpty()) {
+            throw new ResourceNotFoundException(String.format("Company with id %o does not exist!", employeeDetails.getCompanyId()));
         }
         Employee employee = new Employee()
-                .setSurname(createEmployeeRequest.getSurname())
-                .setSalary(createEmployeeRequest.getSalary())
-                .setEmail(createEmployeeRequest.getEmail())
-                .setAddress(createEmployeeRequest.getAddress())
-                .setName(createEmployeeRequest.getName())
+                .setSurname(employeeDetails.getSurname())
+                .setSalary(employeeDetails.getSalary())
+                .setEmail(employeeDetails.getEmail())
+                .setAddress(employeeDetails.getAddress())
+                .setName(employeeDetails.getName())
                 .setCompany(company.get());
         employeesRepository.save(employee);
         return employee;
+    }
+
+    @Override
+    public Employee updateEmployee(Long employeeId, EmployeeDetails employeeDetails) throws ResourceNotFoundException {
+        Optional<Employee> employee = employeesRepository.findById(employeeId);
+        if (employee.isEmpty()) {
+            throw new ResourceNotFoundException(String.format("Employee with id %o does not exist!", employeeId));
+        }
+        Optional<Company> company = companiesRepository.findById(employeeDetails.getCompanyId());
+
+        if(company.isEmpty()){
+            throw new ResourceNotFoundException(String.format("Company with id %o does not exist!", employeeDetails.getCompanyId()));
+        }
+        employee.get()
+                .setAddress(employeeDetails.getAddress())
+                .setEmail(employeeDetails.getEmail())
+                .setCompany(company.get())
+                .setSalary(employeeDetails.getSalary())
+                .setName(employeeDetails.getName())
+                .setSurname(employeeDetails.getSurname());
+        employeesRepository.save(employee.get());
+
+        return employee.get();
     }
 }
