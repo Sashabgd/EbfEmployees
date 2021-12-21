@@ -20,14 +20,18 @@ public class Employee {
     @JoinColumn(name = "company_id")
     private Company company;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String surname;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
+    @Column(nullable = false)
     private String address;
 
+    @Column(nullable = false)
     private double salary;
 }

@@ -3,7 +3,6 @@ package com.itekako.EbfEmployees.database.models;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.Generated;
 
 import javax.persistence.*;
 
@@ -17,6 +16,6 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String name;
 }
