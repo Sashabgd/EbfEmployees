@@ -86,4 +86,15 @@ public class EmployeeServiceImpl implements EmployeeService{
 
         return employee.get();
     }
+
+    @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Retryable(value = CannotAcquireLockException.class, backoff = @Backoff(delay = 100), maxAttempts = 15)
+    public void deleteEmployee(Long id) throws ResourceNotFoundException {
+        Optional<Employee> employee = employeesRepository.findById(id);
+        if (employee.isEmpty()) {
+            throw new ResourceNotFoundException(String.format("Employee with id %o does not exist!", id));
+        }
+        employeesRepository.delete(employee.get());
+    }
 }

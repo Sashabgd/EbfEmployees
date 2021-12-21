@@ -51,4 +51,10 @@ public class EmployeeController {
         Employee updatedEmployee = employeeService.updateEmployee(id, employeeDetails);
         return ResponseEntity.ok(updatedEmployee);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteEmployee(@PathVariable Long id) throws ResourceNotFoundException {
+        employeeService.deleteEmployee(id);
+        return ResponseEntity.noContent().build();
+    }
 }
