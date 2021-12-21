@@ -2,10 +2,11 @@ package com.itekako.EbfEmployees.controllers;
 
 import com.itekako.EbfEmployees.Dtos.CompanyDetails;
 import com.itekako.EbfEmployees.Dtos.CreateCompanyRequest;
-import com.itekako.EbfEmployees.database.repositories.CompaniesRepository;
 import com.itekako.EbfEmployees.exceptions.ResourceNotFoundException;
 import com.itekako.EbfEmployees.services.CompanyService;
 import lombok.Data;
+import org.springdoc.api.annotations.ParameterObject;
+import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 
 @RestController
@@ -22,12 +24,14 @@ public class CompanyController {
     private final CompanyService companyService;
 
     @GetMapping
-    public ResponseEntity getAllCompanies(Pageable pageable){
+    @PageableAsQueryParam
+    public ResponseEntity getAllCompanies(@NotNull @ParameterObject Pageable pageable) {
         return ResponseEntity.ok(companyService.getAllCompanies(pageable));
     }
 
     @GetMapping("/{id}/employees")
-    public ResponseEntity getAllEmployeesForCompany(@Valid @PathVariable("id") Long id, Pageable pageable) throws ResourceNotFoundException {
+    @PageableAsQueryParam
+    public ResponseEntity getAllEmployeesForCompany(@Valid @PathVariable("id") Long id, @NotNull @ParameterObject Pageable pageable) throws ResourceNotFoundException {
         return ResponseEntity.ok(companyService.getAllEmployeesForCompany(id, pageable));
     }
 
