@@ -29,7 +29,7 @@ public class HttpRequestDefaultExceptionHandlers extends ResponseEntityException
         if(dataIntegrityViolationException.getCause() instanceof ConstraintViolationException){
             ConstraintViolationException constraintViolationException =
                     (ConstraintViolationException)dataIntegrityViolationException.getCause();
-            switch (constraintViolationException.getConstraintName()){
+            switch (constraintViolationException.getConstraintName()){ // this is hard to test on H2 database, because those constrains are coming from psql database
                 case "employees_email_key":
                     errorResponse.put("message", "Employee email already exists!");
                     break;
