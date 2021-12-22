@@ -35,7 +35,7 @@ public class CompanyController {
     }
 
     @PostMapping
-    public ResponseEntity createCompany(@RequestBody CompanyDetails companyDetails){
+    public ResponseEntity createCompany(@Valid @RequestBody CompanyDetails companyDetails){
         return ResponseEntity.created(ServletUriComponentsBuilder.
                 fromCurrentRequest().
                 path("/{id}").
