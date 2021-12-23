@@ -1,9 +1,11 @@
 package com.itekako.EbfEmployees.services;
 
 import com.itekako.EbfEmployees.Dtos.CompanyDetails;
+import com.itekako.EbfEmployees.database.models.CompanySalaryStats;
 import com.itekako.EbfEmployees.database.models.Company;
 import com.itekako.EbfEmployees.database.models.Employee;
 import com.itekako.EbfEmployees.database.repositories.CompaniesRepository;
+import com.itekako.EbfEmployees.database.repositories.CompanyStatisticsRepository;
 import com.itekako.EbfEmployees.database.repositories.EmployeesRepository;
 import com.itekako.EbfEmployees.exceptions.ResourceNotFoundException;
 import lombok.Data;
@@ -24,6 +26,7 @@ public class CompanyServiceImpl implements CompanyService{
 
     private final CompaniesRepository companiesRepository;
     private final EmployeesRepository employeesRepository;
+    private final CompanyStatisticsRepository companyStatisticsRepository;
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
@@ -87,5 +90,21 @@ public class CompanyServiceImpl implements CompanyService{
     @Retryable(value = CannotAcquireLockException.class,backoff = @Backoff(delay = 100),maxAttempts = 15)
     public Page<Company> getAllCompanies(Pageable pageable) {
         return companiesRepository.findAll(pageable);
+    }
+
+    @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    @Retryable(value = CannotAcquireLockException.class,backoff = @Backoff(delay = 100),maxAttempts = 15)
+    public CompanySalaryStats getAvgSalary(Long id) throws ResourceNotFoundException {
+        Optional<CompanySalaryStats> avgSalaryForCompany = companyStatisticsRepository.getAvgSalaryForCompany(id);
+        if(avgSalaryForCompany.isEmpty()){
+            throw new ResourceNotFoundException(String.format("Company with id %o does not exist!",id));
+        }
+        return avgSalaryForCompany.get();
+    }
+
+    @Override
+    public Page<CompanySalaryStats> getCompaniesAvgSalary(Pageable pageable) {
+        return companyStatisticsRepository.getCompaniesAvgSalary(pageable);
     }
 }

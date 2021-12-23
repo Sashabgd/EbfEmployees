@@ -58,4 +58,15 @@ public class CompanyController {
         companyService.deleteCompany(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{id}/avg-salary")
+    public ResponseEntity getCompanyAvgSalary(@PathVariable Long id) throws ResourceNotFoundException {
+        return ResponseEntity.ok(companyService.getAvgSalary(id));
+    }
+
+    @GetMapping("/avg-salaries")
+    @PageableAsQueryParam
+    public ResponseEntity getCompaniesAvgSalary(@ParameterObject Pageable pageable){
+        return ResponseEntity.ok(companyService.getCompaniesAvgSalary(pageable));
+    }
 }
