@@ -10,13 +10,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -97,11 +95,11 @@ public class CompanyRepositoryTest {
         companiesRepository.save(company);
         Optional<Company> res = companiesRepository.findById(company.getId());
         Assert.assertTrue(res.isPresent());
-        Assert.assertEquals("test",res.get().getName());
+        Assert.assertEquals("test", res.get().getName());
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void saveCompaniesWithSameName(){
+    public void saveCompaniesWithSameName() {
         Company company = new Company().setName("test");
         Company company2 = new Company().setName("test");
         companiesRepository.save(company);
