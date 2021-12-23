@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itekako.EbfEmployees.Dtos.CompanyDetails;
 import com.itekako.EbfEmployees.database.models.Company;
+import com.itekako.EbfEmployees.database.models.CompanySalaryStats;
 import com.itekako.EbfEmployees.database.models.Employee;
 import com.itekako.EbfEmployees.database.repositories.CompaniesRepository;
 import com.itekako.EbfEmployees.database.repositories.EmployeesRepository;
@@ -194,5 +195,54 @@ public class CompanyControllerTest {
                 .andReturn();
         Page<Employee> employees = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),new TypeReference<Page<Employee>>(){});
         Assert.assertEquals(23,employees.getTotalElements());
+    }
+
+    @Test
+    public void getCompanySalary() throws Exception {
+        Company company = new Company().setName("companyName");
+        companiesRepository.save(company);
+        Employee employee = new Employee()
+                .setCompany(company)
+                .setAddress("address")
+                .setEmail("email")
+                .setSalary(111)
+                .setSurname("surname")
+                .setName("name");
+        employeesRepository.save(employee);
+        MvcResult mvcResult = mockMvc.perform(get("/api/companies/{id}/avg-salary", company.getId()))
+                .andExpect(status().isOk()).andReturn();
+        CompanySalaryStats companySalaryStats = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+                CompanySalaryStats.class);
+        Assert.assertEquals(111,companySalaryStats.getAvgSalary(),0);
+        Assert.assertEquals(company.getId(),companySalaryStats.getId());
+        Assert.assertEquals(company.getName(),companySalaryStats.getName());
+    }
+
+    @Test
+    public void getNonExistingCompanySalary() throws Exception {
+        mockMvc.perform(get("/api/companies/{id}/avg-salary", 55))
+                .andExpect(status().isNotFound()).andReturn();
+    }
+
+    @Test
+    public void getCompaniesAvgSalary() throws Exception {
+        Company company = new Company().setName("companyName");
+        companiesRepository.save(company);
+        Employee employee = new Employee()
+                .setCompany(company)
+                .setAddress("address")
+                .setEmail("email")
+                .setSalary(111)
+                .setSurname("surname")
+                .setName("name");
+        employeesRepository.save(employee);
+        MvcResult mvcResult = mockMvc.perform(get("/api/companies/avg-salaries"))
+                .andExpect(status().isOk()).andReturn();
+        Page<CompanySalaryStats> companySalaryStats = objectMapper
+                .readValue(mvcResult.getResponse().getContentAsString(),
+                        new TypeReference<Page<CompanySalaryStats>>(){});
+        Assert.assertEquals(1,companySalaryStats.getTotalElements());
+        Assert.assertEquals(company.getId(),companySalaryStats.get().findFirst().get().getId());
+        Assert.assertEquals(111.0,companySalaryStats.get().findFirst().get().getAvgSalary(),0);
     }
 }
