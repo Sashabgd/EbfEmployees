@@ -2,7 +2,9 @@ package com.itekako.EbfEmployees.services;
 
 import com.itekako.EbfEmployees.Dtos.CompanyDetails;
 import com.itekako.EbfEmployees.database.models.Company;
+import com.itekako.EbfEmployees.database.models.CompanySalaryStats;
 import com.itekako.EbfEmployees.database.repositories.CompaniesRepository;
+import com.itekako.EbfEmployees.database.repositories.CompanyStatisticsRepository;
 import com.itekako.EbfEmployees.database.repositories.EmployeesRepository;
 import com.itekako.EbfEmployees.exceptions.ResourceNotFoundException;
 import org.junit.Assert;
@@ -25,7 +27,10 @@ public class CompanyServiceTest {
     private CompaniesRepository companiesRepository;
 
     @Mock
-    EmployeesRepository employeesRepository;
+    private EmployeesRepository employeesRepository;
+
+    @Mock
+    private CompanyStatisticsRepository companyStatisticsRepository;
 
     @InjectMocks
     private CompanyServiceImpl companyService;
@@ -33,7 +38,7 @@ public class CompanyServiceTest {
     private final Company testCompanyObject = new Company().setName("test").setId(112L);
 
     @Before
-    public void setup(){
+    public void setup() {
         when(companiesRepository.findById(112L)).thenReturn(Optional.of(testCompanyObject));
     }
 
@@ -131,14 +136,37 @@ public class CompanyServiceTest {
             companyService.deleteCompany(1L);
         }finally {
             verify(companiesRepository,times(1)).findById(1L);
-            verify(companiesRepository,never()).delete(any(Company.class));
+            verify(companiesRepository, never()).delete(any(Company.class));
         }
     }
 
     @Test
-    public void findAllCompanies(){
+    public void findAllCompanies() {
         Pageable pageable = Pageable.ofSize(1);
         companyService.getAllCompanies(pageable);
-        verify(companiesRepository,times(1)).findAll(pageable);
+        verify(companiesRepository, times(1)).findAll(pageable);
+    }
+
+    @Test
+    public void getAvgSalaryForCompany() throws ResourceNotFoundException {
+        CompanySalaryStats companySalaryStats = new CompanySalaryStats();
+        when(companyStatisticsRepository.getAvgSalaryForCompany(any(Long.class))).thenReturn(Optional.of(companySalaryStats));
+        CompanySalaryStats avgSalary = companyService.getAvgSalary(55l);
+        verify(companyStatisticsRepository, times(1)).getAvgSalaryForCompany(55L);
+        Assert.assertSame(companySalaryStats, avgSalary);
+    }
+
+    @Test
+    public void getAvgSalaryForNonExistingCompany() throws ResourceNotFoundException {
+        when(companyStatisticsRepository.getAvgSalaryForCompany(any(Long.class))).thenReturn(Optional.empty());
+        Assert.assertThrows(ResourceNotFoundException.class, () -> companyService.getAvgSalary(55l));
+        verify(companyStatisticsRepository, times(1)).getAvgSalaryForCompany(55L);
+    }
+
+    @Test
+    public void getAvgSalaryForCompanies(){
+        Pageable pageable = Pageable.ofSize(10);
+        companyService.getCompaniesAvgSalary(pageable);
+        verify(companyStatisticsRepository,times(1)).getCompaniesAvgSalary(pageable);
     }
 }
