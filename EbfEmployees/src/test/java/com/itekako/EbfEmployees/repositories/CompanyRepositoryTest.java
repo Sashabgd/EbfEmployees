@@ -5,20 +5,17 @@ import com.itekako.EbfEmployees.database.models.Employee;
 import com.itekako.EbfEmployees.database.repositories.CompaniesRepository;
 import com.itekako.EbfEmployees.database.repositories.EmployeesRepository;
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
 
-@RunWith(SpringRunner.class)
 @DataJpaTest
 @ExtendWith(SpringExtension.class)
 public class CompanyRepositoryTest {
@@ -98,11 +95,11 @@ public class CompanyRepositoryTest {
         Assert.assertEquals("test", res.get().getName());
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
+    @Test
     public void saveCompaniesWithSameName() {
         Company company = new Company().setName("test");
         Company company2 = new Company().setName("test");
         companiesRepository.save(company);
-        companiesRepository.save(company2);
+        Assert.assertThrows(DataIntegrityViolationException.class, () -> companiesRepository.save(company2));
     }
 }

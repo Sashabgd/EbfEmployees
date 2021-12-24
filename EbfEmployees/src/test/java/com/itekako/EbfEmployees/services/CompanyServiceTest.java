@@ -9,19 +9,20 @@ import com.itekako.EbfEmployees.database.repositories.EmployeesRepository;
 import com.itekako.EbfEmployees.exceptions.ResourceNotFoundException;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(SpringExtension.class)
 public class CompanyServiceTest {
     @Mock
     private CompaniesRepository companiesRepository;
@@ -37,7 +38,7 @@ public class CompanyServiceTest {
 
     private final Company testCompanyObject = new Company().setName("test").setId(112L);
 
-    @Before
+    @BeforeEach
     public void setup() {
         when(companiesRepository.findById(112L)).thenReturn(Optional.of(testCompanyObject));
     }
@@ -50,57 +51,45 @@ public class CompanyServiceTest {
         verify(companiesRepository,times(1)).findById(112L);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void getNonExistingCompany() throws ResourceNotFoundException {
-        try {
-            companyService.getCompany(1L);
-        }finally {
-            verify(companiesRepository,times(1)).findById(1L);
-        }
-    }
-
-    @Test(expected = ResourceNotFoundException.class)
-    public void findCompanyByNull() throws ResourceNotFoundException {
-        try {
-            companyService.getCompany(null);
-        }finally {
-            verify(companiesRepository,times(1)).findById(null);
-        }
+        Assert.assertThrows(ResourceNotFoundException.class, () -> companyService.getCompany(1L));
+        verify(companiesRepository, times(1)).findById(1L);
     }
 
     @Test
-    public void createCompany(){
+    public void findCompanyByNull() throws ResourceNotFoundException {
+        Assert.assertThrows(ResourceNotFoundException.class, () -> companyService.getCompany(null));
+        verify(companiesRepository, times(1)).findById(null);
+    }
+
+    @Test
+    public void createCompany() {
         CompanyDetails companyDetails = new CompanyDetails()
                 .setName("testc");
         companyService.createCompany(companyDetails);
         ArgumentCaptor<Company> argumentCaptor = ArgumentCaptor.forClass(Company.class);
-        verify(companiesRepository,times(1)).save(argumentCaptor.capture());
-        Assert.assertEquals("testc",argumentCaptor.getValue().getName());
+        verify(companiesRepository, times(1)).save(argumentCaptor.capture());
+        Assert.assertEquals("testc", argumentCaptor.getValue().getName());
     }
 
-    @Test(expected = NullPointerException.class)
-    public void createNullCompany(){
-        try {
-            companyService.createCompany(null);
-        }finally {
-            verify(companiesRepository,never()).save(any(Company.class));
-        }
+    @Test
+    public void createNullCompany() {
+        Assert.assertThrows(NullPointerException.class, () -> companyService.createCompany(null));
+        verify(companiesRepository, never()).save(any(Company.class));
     }
 
     @Test
     public void getCompanyEmployees() throws ResourceNotFoundException {
         Pageable pageable = Pageable.ofSize(10);
-        companyService.getAllEmployeesForCompany(112L,pageable);
-        verify(employeesRepository,times(1)).findAllEmployeesByCompany(testCompanyObject,pageable);
+        companyService.getAllEmployeesForCompany(112L, pageable);
+        verify(employeesRepository, times(1)).findAllEmployeesByCompany(testCompanyObject, pageable);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void getNonExistingCompanyEmployees() throws ResourceNotFoundException {
-        try {
-            companyService.getAllEmployeesForCompany(1, Pageable.ofSize(19));
-        }finally {
-            verify(employeesRepository,never()).findAllEmployeesByCompany(any(Company.class),any(Pageable.class));
-        }
+        Assert.assertThrows(ResourceNotFoundException.class, () -> companyService.getAllEmployeesForCompany(1, Pageable.ofSize(19)));
+        verify(employeesRepository, never()).findAllEmployeesByCompany(any(Company.class), any(Pageable.class));
     }
 
     @Test
@@ -113,14 +102,11 @@ public class CompanyServiceTest {
         Assert.assertSame(res,testCompanyObject);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void updateNonExistingCompany() throws ResourceNotFoundException {
-        try {
-            companyService.updateCompany(1L,new CompanyDetails());
-        }finally {
-            verify(companiesRepository,times(1)).findById(1L);
-            verify(companiesRepository,never()).save(any(Company.class));
-        }
+        Assert.assertThrows(ResourceNotFoundException.class, () -> companyService.updateCompany(1L, new CompanyDetails()));
+        verify(companiesRepository, times(1)).findById(1L);
+        verify(companiesRepository, never()).save(any(Company.class));
     }
 
     @Test
@@ -130,14 +116,11 @@ public class CompanyServiceTest {
         verify(companiesRepository,times(1)).delete(testCompanyObject);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void deleteNonExistingCompany() throws ResourceNotFoundException {
-        try {
-            companyService.deleteCompany(1L);
-        }finally {
-            verify(companiesRepository,times(1)).findById(1L);
-            verify(companiesRepository, never()).delete(any(Company.class));
-        }
+        Assert.assertThrows(ResourceNotFoundException.class, () -> companyService.deleteCompany(1L));
+        verify(companiesRepository, times(1)).findById(1L);
+        verify(companiesRepository, never()).delete(any(Company.class));
     }
 
     @Test

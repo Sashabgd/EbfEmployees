@@ -6,7 +6,8 @@ import com.itekako.EbfEmployees.database.repositories.CompaniesRepository;
 import com.itekako.EbfEmployees.database.repositories.EmployeesRepository;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,7 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
 
-@RunWith(SpringRunner.class)
+
 @DataJpaTest
 @ExtendWith(SpringExtension.class)
 public class EmployeeRepositoryTest {
@@ -34,7 +35,7 @@ public class EmployeeRepositoryTest {
 
     private Company companyTestObject;
 
-    @Before
+    @BeforeEach
     public void setup() {
         companyTestObject = new Company()
                 .setName("testCompanyName");

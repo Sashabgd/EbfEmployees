@@ -7,21 +7,21 @@ import com.itekako.EbfEmployees.database.repositories.CompaniesRepository;
 import com.itekako.EbfEmployees.database.repositories.EmployeesRepository;
 import com.itekako.EbfEmployees.exceptions.ResourceNotFoundException;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(SpringExtension.class)
 public class EmployeeServiceTest {
 
     private static final int SOME_SIZE = 111;
@@ -47,7 +47,7 @@ public class EmployeeServiceTest {
 
     Optional<Company> company;
 
-    @Before
+    @BeforeEach
     public void setup() {
         when(employeesRepository.findAll(any(Pageable.class))).thenReturn(employeesMocks);
 
