@@ -1,5 +1,7 @@
 package com.itekako.EbfEmployees.configurations;
 
+import com.itekako.EbfEmployees.auth.JwtFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,12 +15,17 @@ import java.util.Arrays;
 
 @Configuration
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private AuthConfiguration authConfiguration;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/swagger-ui.html","/api-docs/**","/webjars/**","/swagger-ui/**","/v3/api-docs/**").permitAll() //allow swagger
+                .antMatchers("/swagger-ui.html", "/api-docs/**", "/webjars/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll() //allow swagger
                 .antMatchers("/api/**").hasRole("admin").anyRequest().authenticated()
-                .and().csrf().disable().cors();
+                .and().csrf().disable().cors()
+                .and().addFilter(new JwtFilter(authenticationManager(), authConfiguration));
     }
 
     @Bean
