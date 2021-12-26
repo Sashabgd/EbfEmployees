@@ -55,7 +55,9 @@ public class JwtFilter extends BasicAuthenticationFilter {
         Claim role = decodedJWT.getClaims().get("ROLE");
 
         ArrayList<GrantedAuthority> roles = new ArrayList<>();
-        roles.add(new SimpleGrantedAuthority("ROLE_" + role.asString()));
+        if(role!=null) {
+            roles.add(new SimpleGrantedAuthority("ROLE_" + role.asString()));
+        }
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(subject,null, roles));
         super.doFilterInternal(request, response, chain);
