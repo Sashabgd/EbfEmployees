@@ -2,6 +2,7 @@ package com.itekako.EbfEmployees.auth;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -44,7 +45,7 @@ public class JwtFilter extends BasicAuthenticationFilter {
         try{
             decodedJWT = JWT.require(Algorithm.HMAC512(authConfiguration.getSecret())).build().verify(jwtToken);
             subject = decodedJWT.getSubject();
-        }catch (TokenExpiredException e){
+        }catch (TokenExpiredException| SignatureVerificationException e){
             super.doFilterInternal(request, response, chain);
             return;
         }
