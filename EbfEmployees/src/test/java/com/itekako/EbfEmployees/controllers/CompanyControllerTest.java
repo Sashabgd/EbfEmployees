@@ -1,9 +1,11 @@
 package com.itekako.EbfEmployees.controllers;
 
+import Utils.JwtUtils;
 import Utils.PageModule;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itekako.EbfEmployees.Dtos.CompanyDetails;
+import com.itekako.EbfEmployees.configurations.AuthConfiguration;
 import com.itekako.EbfEmployees.database.models.Company;
 import com.itekako.EbfEmployees.database.models.CompanySalaryStats;
 import com.itekako.EbfEmployees.database.models.Employee;
@@ -51,17 +53,25 @@ public class CompanyControllerTest {
     @Autowired
     private EmployeesRepository employeesRepository;
 
+    @Autowired
+    private AuthConfiguration authConfiguration;
+
+    private JwtUtils jwtUtils;
+
+
     @BeforeEach
     public void setup() {
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new PageModule());
+        jwtUtils = new JwtUtils(authConfiguration);
     }
 
     @Test
     public void getCompanyEndpoint() throws Exception {
         Company company = new Company().setName("testCompany");
         companiesRepository.save(company);
-        MvcResult mvcResult = mockMvc.perform(get("/api/companies/" + company.getId()))
+        MvcResult mvcResult = mockMvc.perform(get("/api/companies/" + company.getId())
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessToken()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
@@ -72,7 +82,8 @@ public class CompanyControllerTest {
 
     @Test
     public void getCompanyEndpointNotFound() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/api/companies/" + 1))
+        MvcResult mvcResult = mockMvc.perform(get("/api/companies/" + 1)
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessToken()))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andReturn();
@@ -84,18 +95,72 @@ public class CompanyControllerTest {
             Company company = new Company().setName("" + i);
             companiesRepository.save(company);
         }
-        MvcResult mvcResult = mockMvc.perform(get("/api/companies/"))
+        MvcResult mvcResult = mockMvc.perform(get("/api/companies/")
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessToken()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
-        Page<Company> companies = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),new TypeReference<Page<Company>>() {});
-        Assert.assertEquals(10,companies.getTotalElements());
+        Page<Company> companies = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<Page<Company>>() {
+        });
+        Assert.assertEquals(10, companies.getTotalElements());
+    }
+
+    @Test
+    public void getAllCompaniesWithoutJwtToken() throws Exception {
+        for (int i = 0; i < 10; i++) {
+            Company company = new Company().setName("" + i);
+            companiesRepository.save(company);
+        }
+        MvcResult mvcResult = mockMvc.perform(get("/api/companies/"))
+                .andDo(print())
+                .andExpect(status().isForbidden())
+                .andReturn();
+    }
+
+    @Test
+    public void getAllCompaniesWithExpiredJwtToken() throws Exception {
+        for (int i = 0; i < 10; i++) {
+            Company company = new Company().setName("" + i);
+            companiesRepository.save(company);
+        }
+        MvcResult mvcResult = mockMvc.perform(get("/api/companies/")
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessTokenExpired()))
+                .andDo(print())
+                .andExpect(status().isForbidden())
+                .andReturn();
+    }
+
+    @Test
+    public void getAllCompaniesWithWrongSecretJwtToken() throws Exception {
+        for (int i = 0; i < 10; i++) {
+            Company company = new Company().setName("" + i);
+            companiesRepository.save(company);
+        }
+        MvcResult mvcResult = mockMvc.perform(get("/api/companies/")
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessTokenWrongSecret()))
+                .andDo(print())
+                .andExpect(status().isForbidden())
+                .andReturn();
+    }
+
+    @Test
+    public void getAllCompaniesWithoutRoleJwtToken() throws Exception {
+        for (int i = 0; i < 10; i++) {
+            Company company = new Company().setName("" + i);
+            companiesRepository.save(company);
+        }
+        MvcResult mvcResult = mockMvc.perform(get("/api/companies/")
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessWithoutRole()))
+                .andDo(print())
+                .andExpect(status().isForbidden())
+                .andReturn();
     }
 
     @Test
     public void createCompany() throws Exception {
         mockMvc.perform(post("/api/companies")
-        .content(objectMapper.writeValueAsString(new CompanyDetails().setName("test")))
+                .content(objectMapper.writeValueAsString(new CompanyDetails().setName("test")))
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessToken())
         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated());
         Page<Company> all = companiesRepository.findAll(Pageable.ofSize(10));
@@ -105,12 +170,14 @@ public class CompanyControllerTest {
     @Test
     public void createCompanyWithSameName() throws Exception {
         mockMvc.perform(post("/api/companies")
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessToken())
                 .content(objectMapper.writeValueAsString(new CompanyDetails().setName("test")))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated());
         Page<Company> all = companiesRepository.findAll(Pageable.ofSize(10));
         Assert.assertEquals(1,all.getTotalElements());
         mockMvc.perform(post("/api/companies")
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessToken())
                 .content(objectMapper.writeValueAsString(new CompanyDetails().setName("test")))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isBadRequest());
@@ -119,6 +186,7 @@ public class CompanyControllerTest {
     @Test
     public void createCompanyWithNullName() throws Exception {
         mockMvc.perform(post("/api/companies")
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessToken())
                 .content(objectMapper.writeValueAsString(new CompanyDetails()))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isBadRequest());
@@ -128,7 +196,8 @@ public class CompanyControllerTest {
     public void updateCompany() throws Exception {
         Company company = new Company().setName("testCompany");
         companiesRepository.save(company);
-        mockMvc.perform(put("/api/companies/{id}",company.getId())
+        mockMvc.perform(put("/api/companies/{id}", company.getId())
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessToken())
         .contentType(MediaType.APPLICATION_JSON_VALUE)
         .content(objectMapper.writeValueAsString(new CompanyDetails().setName("newName"))))
                 .andExpect(status().isOk());
@@ -140,6 +209,7 @@ public class CompanyControllerTest {
     @Test
     public void updateNonExistingCompany() throws Exception {
         mockMvc.perform(put("/api/companies/{id}",22)
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessToken())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(new CompanyDetails().setName("newName"))))
                 .andExpect(status().isNotFound());
@@ -150,6 +220,7 @@ public class CompanyControllerTest {
         Company company = new Company().setName("testCompany");
         companiesRepository.save(company);
         mockMvc.perform(put("/api/companies/{id}",company.getId())
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessToken())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(new CompanyDetails())))
                 .andExpect(status().isBadRequest());
@@ -162,7 +233,8 @@ public class CompanyControllerTest {
     public void deleteCompany() throws Exception {
         Company company = new Company().setName("testCompany");
         companiesRepository.save(company);
-        mockMvc.perform(delete("/api/companies/{id}",company.getId()))
+        mockMvc.perform(delete("/api/companies/{id}",company.getId())
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessToken()))
                 .andExpect(status().isNoContent());
         Optional<Company> persisted = companiesRepository.findById(company.getId());
         Assert.assertFalse(persisted.isPresent());
@@ -170,7 +242,8 @@ public class CompanyControllerTest {
 
     @Test
     public void deleteNonExistingCompany() throws Exception {
-        mockMvc.perform(delete("/api/companies/{id}",22))
+        mockMvc.perform(delete("/api/companies/{id}",22)
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessToken()))
                 .andExpect(status().isNotFound());
     }
 
@@ -188,7 +261,8 @@ public class CompanyControllerTest {
                     .setName("name" + i);
             employeesRepository.save(employee);
         }
-        MvcResult mvcResult = mockMvc.perform(get("/api/companies/{id}/employees",company.getId()))
+        MvcResult mvcResult = mockMvc.perform(get("/api/companies/{id}/employees",company.getId())
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessToken()))
                 .andExpect(status().isOk())
                 .andReturn();
         Page<Employee> employees = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),new TypeReference<Page<Employee>>(){});
@@ -207,7 +281,8 @@ public class CompanyControllerTest {
                 .setSurname("surname")
                 .setName("name");
         employeesRepository.save(employee);
-        MvcResult mvcResult = mockMvc.perform(get("/api/companies/{id}/avg-salary", company.getId()))
+        MvcResult mvcResult = mockMvc.perform(get("/api/companies/{id}/avg-salary", company.getId())
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessToken()))
                 .andExpect(status().isOk()).andReturn();
         CompanySalaryStats companySalaryStats = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
                 CompanySalaryStats.class);
@@ -218,7 +293,8 @@ public class CompanyControllerTest {
 
     @Test
     public void getNonExistingCompanySalary() throws Exception {
-        mockMvc.perform(get("/api/companies/{id}/avg-salary", 55))
+        mockMvc.perform(get("/api/companies/{id}/avg-salary", 55)
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessToken()))
                 .andExpect(status().isNotFound()).andReturn();
     }
 
@@ -234,7 +310,8 @@ public class CompanyControllerTest {
                 .setSurname("surname")
                 .setName("name");
         employeesRepository.save(employee);
-        MvcResult mvcResult = mockMvc.perform(get("/api/companies/avg-salaries"))
+        MvcResult mvcResult = mockMvc.perform(get("/api/companies/avg-salaries")
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessToken()))
                 .andExpect(status().isOk()).andReturn();
         Page<CompanySalaryStats> companySalaryStats = objectMapper
                 .readValue(mvcResult.getResponse().getContentAsString(),

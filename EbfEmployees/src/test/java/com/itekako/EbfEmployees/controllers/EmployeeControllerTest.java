@@ -1,10 +1,12 @@
 package com.itekako.EbfEmployees.controllers;
 
+import Utils.JwtUtils;
 import Utils.PageModule;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.itekako.EbfEmployees.Dtos.EmployeeDetails;
+import com.itekako.EbfEmployees.configurations.AuthConfiguration;
 import com.itekako.EbfEmployees.database.models.Company;
 import com.itekako.EbfEmployees.database.models.Employee;
 import com.itekako.EbfEmployees.database.repositories.CompaniesRepository;
@@ -51,6 +53,11 @@ public class EmployeeControllerTest {
     @Autowired
     private EmployeesRepository employeesRepository;
 
+    @Autowired
+    private AuthConfiguration authConfiguration;
+
+    private JwtUtils jwtUtils;
+
     private Company company;
 
     @BeforeEach
@@ -59,6 +66,7 @@ public class EmployeeControllerTest {
         objectMapper.registerModule(new PageModule());
         company = new Company().setName("testCompany");
         companiesRepository.save(company);
+        jwtUtils = new JwtUtils(authConfiguration);
     }
 
     @Test
@@ -73,7 +81,8 @@ public class EmployeeControllerTest {
                     .setName("name" + i);
             employeesRepository.save(employee);
         }
-        MvcResult mvcResult = mockMvc.perform(get("/api/employees/"))
+        MvcResult mvcResult = mockMvc.perform(get("/api/employees/")
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessToken()))
                 .andExpect(status().isOk())
                 .andReturn();
         Page<Employee> employees = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<Page<Employee>>() {
@@ -91,7 +100,10 @@ public class EmployeeControllerTest {
                 .setSurname("surname")
                 .setName("name");
         employeesRepository.save(employee);
-        MvcResult mvcResult = mockMvc.perform(get("/api/employees/{id}", employee.getId()))
+        MvcResult mvcResult = mockMvc.perform(
+                get("/api/employees/{id}", employee.getId())
+                        .header("Authorization", "Bearer " + jwtUtils.generateAccessToken())
+        )
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -108,7 +120,8 @@ public class EmployeeControllerTest {
 
     @Test
     public void getNonExistingEmployee() throws Exception {
-        mockMvc.perform(get("/api/employees/{id}", 444))
+        mockMvc.perform(get("/api/employees/{id}", 444)
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessToken()))
                 .andExpect(status().isNotFound());
     }
 
@@ -135,7 +148,8 @@ public class EmployeeControllerTest {
 
         mockMvc.perform(post("/api/employees")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper1.writeValueAsString(employee)))
+                .content(objectMapper1.writeValueAsString(employee))
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessToken()))
                 .andExpect(status().isBadRequest());
     }
 
@@ -150,7 +164,8 @@ public class EmployeeControllerTest {
                 .setName("name");
         mockMvc.perform(post("/api/employees")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(employee)))
+                .content(objectMapper.writeValueAsString(employee))
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessToken()))
                 .andExpect(status().isCreated());
         Page<Employee> all = employeesRepository.findAll(Pageable.ofSize(10));
         Assert.assertEquals(1, all.getTotalElements());
@@ -176,6 +191,7 @@ public class EmployeeControllerTest {
 
         mockMvc.perform(put("/api/employees/{id}", employee.getId())
                 .content(objectMapper.writeValueAsString(employeeDetails))
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessToken())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk());
         Optional<Employee> persisted = employeesRepository.findById(employee.getId());
         Assert.assertTrue(persisted.isPresent());
@@ -219,6 +235,7 @@ public class EmployeeControllerTest {
                 .setCompanyId(company.getId());
 
         mockMvc.perform(put("/api/employees/{id}", employee.getId())
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessToken())
                 .content(objectMapper1.writeValueAsString(employeeDetails))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isBadRequest());
     }
@@ -235,6 +252,7 @@ public class EmployeeControllerTest {
 
         mockMvc.perform(put("/api/employees/{id}", 222)
                 .content(objectMapper.writeValueAsString(employeeDetails))
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessToken())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isNotFound());
     }
 
@@ -248,7 +266,8 @@ public class EmployeeControllerTest {
                 .setSurname("surname")
                 .setName("name");
         employeesRepository.save(employee);
-        mockMvc.perform(delete("/api/employees/{id}",employee.getId()))
+        mockMvc.perform(delete("/api/employees/{id}",employee.getId())
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessToken()))
                 .andExpect(status().isNoContent());
         Optional<Employee> byId = employeesRepository.findById(employee.getId());
         Assert.assertFalse(byId.isPresent());
@@ -256,7 +275,8 @@ public class EmployeeControllerTest {
 
     @Test
     public void deleteNonExistingEmployee() throws Exception {
-        mockMvc.perform(delete("/api/employees/{id}",222))
+        mockMvc.perform(delete("/api/employees/{id}",222)
+                .header("Authorization", "Bearer " + jwtUtils.generateAccessToken()))
                 .andExpect(status().isNotFound());
     }
 }
