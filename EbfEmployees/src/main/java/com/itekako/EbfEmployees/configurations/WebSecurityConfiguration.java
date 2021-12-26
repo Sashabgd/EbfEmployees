@@ -15,7 +15,9 @@ import java.util.Arrays;
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/**").permitAll()
+        http.authorizeRequests()
+                .antMatchers("/swagger-ui.html","/api-docs/**","/webjars/**","/swagger-ui/**","/v3/api-docs/**").permitAll() //allow swagger
+                .antMatchers("/api/**").hasRole("admin").anyRequest().authenticated()
                 .and().csrf().disable().cors();
     }
 
