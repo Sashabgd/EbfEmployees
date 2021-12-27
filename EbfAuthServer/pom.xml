@@ -12,6 +12,7 @@
 	<artifactId>EbfAuthServer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>EbfAuthServer</name>
+	<packaging>jar</packaging>
 	<description>Demo project for EBF</description>
 	<properties>
 		<java.version>11</java.version>

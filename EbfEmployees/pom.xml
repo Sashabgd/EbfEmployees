@@ -11,7 +11,7 @@
 	<groupId>com.itekako</groupId>
 	<artifactId>EbfEmployees</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>EbfEmployees</name>
 	<description>Demo project for EBF</description>
 	<properties>
