@@ -1,0 +1,37 @@
+version: '2'
+
+services:
+  ebf_employees:
+    image: 'sashabn/ebf_employees:last'
+    build:
+      context: .
+      dockerfile: EbfEmployees/Dockerfile
+    container_name: ebf_employees
+    depends_on:
+      - db
+      - auth
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/ebf_employees
+      - SPRING_DATASOURCE_USERNAME=ebf_db_user
+      - SPRING_DATASOURCE_PASSWORD=ebf_db_password
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    ports:
+      - "8080:8080"
+          
+  db:
+    image: 'postgres:13.1-alpine'
+    container_name: db
+    environment:
+      - POSTGRES_DB=ebf_employees
+      - POSTGRES_USER=ebf_db_user
+      - POSTGRES_PASSWORD=ebf_db_password
+      - APP_DB_NAME=ebf_employees
+
+  auth:
+    image: 'sashabn/ebf:auth'
+    container_name: auth
+    ports:
+      - "8088:8088"
+    build:
+        context: .
+        dockerfile: EbfAuthServer/Dockerfile
