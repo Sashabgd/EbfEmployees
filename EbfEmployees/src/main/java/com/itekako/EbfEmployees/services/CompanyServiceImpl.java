@@ -1,8 +1,8 @@
 package com.itekako.EbfEmployees.services;
 
 import com.itekako.EbfEmployees.Dtos.CompanyDetails;
-import com.itekako.EbfEmployees.database.models.CompanySalaryStats;
 import com.itekako.EbfEmployees.database.models.Company;
+import com.itekako.EbfEmployees.database.models.CompanySalaryStats;
 import com.itekako.EbfEmployees.database.models.Employee;
 import com.itekako.EbfEmployees.database.repositories.CompaniesRepository;
 import com.itekako.EbfEmployees.database.repositories.CompanyStatisticsRepository;
@@ -78,11 +78,9 @@ public class CompanyServiceImpl implements CompanyService{
     @Transactional(isolation = Isolation.SERIALIZABLE)
     @Retryable(value = CannotAcquireLockException.class,backoff = @Backoff(delay = 100),maxAttempts = 15)
     public void deleteCompany(Long id) throws ResourceNotFoundException {
-        Optional<Company> company = companiesRepository.findById(id);
-        if(company.isEmpty()){
-            throw new ResourceNotFoundException(String.format("Company with id %o does not exist!",id));
-        }
-        companiesRepository.delete(company.get());
+        Company company = companiesRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException(String.format("Company with id %o does not exist!", id)));
+        companiesRepository.delete(company);
     }
 
     @Override
