@@ -82,11 +82,10 @@ public class CompanyControllerTest {
 
     @Test
     public void getCompanyEndpointNotFound() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/api/companies/" + 1)
+        mockMvc.perform(get("/api/companies/" + 1)
                 .header("Authorization", "Bearer " + jwtUtils.generateAccessToken()))
                 .andDo(print())
-                .andExpect(status().isNotFound())
-                .andReturn();
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -111,10 +110,9 @@ public class CompanyControllerTest {
             Company company = new Company().setName("" + i);
             companiesRepository.save(company);
         }
-        MvcResult mvcResult = mockMvc.perform(get("/api/companies/"))
+        mockMvc.perform(get("/api/companies/"))
                 .andDo(print())
-                .andExpect(status().isForbidden())
-                .andReturn();
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -123,11 +121,10 @@ public class CompanyControllerTest {
             Company company = new Company().setName("" + i);
             companiesRepository.save(company);
         }
-        MvcResult mvcResult = mockMvc.perform(get("/api/companies/")
+        mockMvc.perform(get("/api/companies/")
                 .header("Authorization", "Bearer " + jwtUtils.generateAccessTokenExpired()))
                 .andDo(print())
-                .andExpect(status().isForbidden())
-                .andReturn();
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -136,11 +133,10 @@ public class CompanyControllerTest {
             Company company = new Company().setName("" + i);
             companiesRepository.save(company);
         }
-        MvcResult mvcResult = mockMvc.perform(get("/api/companies/")
+        mockMvc.perform(get("/api/companies/")
                 .header("Authorization", "Bearer " + jwtUtils.generateAccessTokenWrongSecret()))
                 .andDo(print())
-                .andExpect(status().isForbidden())
-                .andReturn();
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -149,11 +145,10 @@ public class CompanyControllerTest {
             Company company = new Company().setName("" + i);
             companiesRepository.save(company);
         }
-        MvcResult mvcResult = mockMvc.perform(get("/api/companies/")
+        mockMvc.perform(get("/api/companies/")
                 .header("Authorization", "Bearer " + jwtUtils.generateAccessWithoutRole()))
                 .andDo(print())
-                .andExpect(status().isForbidden())
-                .andReturn();
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -295,7 +290,7 @@ public class CompanyControllerTest {
     public void getNonExistingCompanySalary() throws Exception {
         mockMvc.perform(get("/api/companies/{id}/avg-salary", 55)
                 .header("Authorization", "Bearer " + jwtUtils.generateAccessToken()))
-                .andExpect(status().isNotFound()).andReturn();
+                .andExpect(status().isNotFound());
     }
 
     @Test
