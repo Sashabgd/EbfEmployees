@@ -9,14 +9,16 @@ import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpInterceptorService } from './services/http-interceptor.service';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatNativeDateModule} from '@angular/material/core';
-import {MatSidenavModule} from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatDialogModule } from '@angular/material/dialog'
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatButtonModule} from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 import { CompaniesComponent } from './components/companies/companies.component';
 import { ReportsComponent } from './components/reports/reports.component';
 import { EmployeesComponent } from './components/employees/employees.component';
+import { LoginDialogComponent } from './components/login-dialog/login-dialog.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,8 @@ import { EmployeesComponent } from './components/employees/employees.component';
     HomeComponent,
     CompaniesComponent,
     ReportsComponent,
-    EmployeesComponent
+    EmployeesComponent,
+    LoginDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -36,9 +39,13 @@ import { EmployeesComponent } from './components/employees/employees.component';
     MatNativeDateModule,
     MatSidenavModule,
     BrowserAnimationsModule,
-    MatButtonModule
+    MatButtonModule,
+    MatDialogModule
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true }],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+    LoginDialogComponent
+  ]
 })
 export class AppModule { }
