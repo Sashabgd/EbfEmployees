@@ -1,3 +1,4 @@
+import { AccessTokenModel } from './../../models/access-token.model';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
@@ -9,11 +10,14 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class LoginDialogComponent implements OnInit {
 
   constructor(
-    private dialogRef:MatDialogRef<LoginDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data:string
+    private dialogRef: MatDialogRef<LoginDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: string
   ) { }
 
   ngOnInit(): void {
   }
 
+  public onAccessToken(event:AccessTokenModel|null){
+    this.dialogRef.close(event);
+  }
 }

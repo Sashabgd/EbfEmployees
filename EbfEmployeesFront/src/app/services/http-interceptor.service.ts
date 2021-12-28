@@ -13,9 +13,12 @@ export class HttpInterceptorService implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(this.cloneRequestWithAccessToken(req)).pipe(catchError(e => {
-      if (e.status == 401 || e.status == 403) {
+      if (e.status == 401 || e.status == 403 && req.url != '/api/login') {
         let dialog = this.matDialog.open(LoginDialogComponent, { width: '40rem', data: "dada", panelClass: 'app-dialog' });
-        return dialog.afterClosed().pipe(filter(t => t != null), take(1), switchMap(accessToken => {
+        return dialog.afterClosed().pipe(take(1), switchMap(accessToken => {
+          if (accessToken == null) {
+            return throwError(() => e);
+          }
           this.storageService.setAccessToken(accessToken.accessToken);
           return next.handle(this.cloneRequestWithAccessToken(req));
         }));
@@ -26,13 +29,18 @@ export class HttpInterceptorService implements HttpInterceptor {
   }
 
   cloneRequestWithAccessToken(request: HttpRequest<any>): HttpRequest<any> {
-    return request.clone(
-      {
-        withCredentials: true,
-        setHeaders: {
-          Authorization: `Bearer ${this.storageService.getAccessToken()}`
+    if (this.storageService.getAccessToken() != null) {
+
+      return request.clone(
+        {
+          withCredentials: true,
+          setHeaders: {
+            Authorization: `Bearer ${this.storageService.getAccessToken()}`
+          }
         }
-      }
-    )
+      )
+    } else {
+      return request;
+    }
   }
 }

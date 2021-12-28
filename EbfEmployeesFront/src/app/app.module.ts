@@ -19,6 +19,11 @@ import { CompaniesComponent } from './components/companies/companies.component';
 import { ReportsComponent } from './components/reports/reports.component';
 import { EmployeesComponent } from './components/employees/employees.component';
 import { LoginDialogComponent } from './components/login-dialog/login-dialog.component';
+import { MatCardModule } from '@angular/material/card'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input'
+import {MatSnackBarModule} from '@angular/material/snack-bar'
 
 @NgModule({
   declarations: [
@@ -40,7 +45,13 @@ import { LoginDialogComponent } from './components/login-dialog/login-dialog.com
     MatSidenavModule,
     BrowserAnimationsModule,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    MatCardModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSnackBarModule
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true }],
   bootstrap: [AppComponent],
