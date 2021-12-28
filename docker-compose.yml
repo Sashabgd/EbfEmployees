@@ -3,9 +3,6 @@ version: '2'
 services:
   ebf_employees:
     image: 'sashabn/ebf_employees:last'
-    build:
-      context: .
-      dockerfile: EbfEmployees/Dockerfile
     container_name: ebf_employees
     depends_on:
       - db
@@ -32,6 +29,3 @@ services:
     container_name: auth
     ports:
       - "8088:8088"
-    build:
-        context: .
-        dockerfile: EbfAuthServer/Dockerfile
