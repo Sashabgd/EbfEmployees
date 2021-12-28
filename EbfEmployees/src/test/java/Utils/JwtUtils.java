@@ -37,7 +37,7 @@ public class JwtUtils {
 
     public String generateAccessWithoutRole() {
         return JWT.create().withSubject(String.valueOf("testUser"))
-                .withExpiresAt(new Date(System.currentTimeMillis() - authConfiguration.getLifeTime()))
+                .withExpiresAt(new Date(System.currentTimeMillis() + authConfiguration.getLifeTime()))
                 .sign(Algorithm.HMAC512(authConfiguration.getSecret().getBytes()));
     }
 }

@@ -124,7 +124,7 @@ public class CompanyControllerTest {
         mockMvc.perform(get("/api/companies/")
                 .header("Authorization", "Bearer " + jwtUtils.generateAccessTokenExpired()))
                 .andDo(print())
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -136,7 +136,7 @@ public class CompanyControllerTest {
         mockMvc.perform(get("/api/companies/")
                 .header("Authorization", "Bearer " + jwtUtils.generateAccessTokenWrongSecret()))
                 .andDo(print())
-                .andExpect(status().isForbidden());
+                .andExpect(status().isBadRequest());
     }
 
     @Test

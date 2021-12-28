@@ -45,8 +45,11 @@ public class JwtFilter extends BasicAuthenticationFilter {
         try{
             decodedJWT = JWT.require(Algorithm.HMAC512(authConfiguration.getSecret())).build().verify(jwtToken);
             subject = decodedJWT.getSubject();
-        }catch (TokenExpiredException| SignatureVerificationException e){
-            super.doFilterInternal(request, response, chain);
+        }catch (TokenExpiredException e){
+            response.setStatus(401);
+            return;
+        }catch (SignatureVerificationException e){
+            response.setStatus(400);
             return;
         }
         if (subject == null) {
