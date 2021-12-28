@@ -14,12 +14,18 @@ import {MatNativeDateModule} from '@angular/material/core';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material/button';
+import { CompaniesComponent } from './components/companies/companies.component';
+import { ReportsComponent } from './components/reports/reports.component';
+import { EmployeesComponent } from './components/employees/employees.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    CompaniesComponent,
+    ReportsComponent,
+    EmployeesComponent
   ],
   imports: [
     BrowserModule,

@@ -1,9 +1,9 @@
 <ng-container>
   <mat-sidenav-container class="my-container">
     <mat-sidenav #sidenav mode="side" opened  class="my-sidenav">
-      <button mat-flat-button>Companies</button>
-      <button mat-flat-button>Reports</button>
-      <button mat-flat-button>All Employees</button>
+      <button mat-flat-button [routerLink]="'/companies'" routerLinkActive="active">Companies</button>
+      <button mat-flat-button [routerLink]="'/reports'" routerLinkActive="active">Reports</button>
+      <button mat-flat-button [routerLink]="'/employees'" routerLinkActive="active">Employees</button>
     </mat-sidenav>
     <mat-sidenav-content>
       <router-outlet></router-outlet>
