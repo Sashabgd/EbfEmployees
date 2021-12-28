@@ -21,9 +21,11 @@ import { EmployeesComponent } from './components/employees/employees.component';
 import { LoginDialogComponent } from './components/login-dialog/login-dialog.component';
 import { MatCardModule } from '@angular/material/card'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input'
-import {MatSnackBarModule} from '@angular/material/snack-bar'
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input'
+import { MatSnackBarModule } from '@angular/material/snack-bar'
+import { MatTableModule } from '@angular/material/table'
+import { MatTableDataSource } from '@angular/material/table'
 
 @NgModule({
   declarations: [
@@ -51,7 +53,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar'
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatTableModule
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true }],
   bootstrap: [AppComponent],

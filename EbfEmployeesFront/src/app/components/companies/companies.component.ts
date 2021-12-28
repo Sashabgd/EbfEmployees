@@ -1,5 +1,7 @@
+import { PageModel } from './../../models/page.model';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { CompanyModel } from 'src/app/models/company.model';
 
 @Component({
   selector: 'app-companies',
@@ -8,11 +10,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CompaniesComponent implements OnInit {
 
+  public tableData!:PageModel<CompanyModel>;
+  displayedColumns: string[] = ['id', 'name'];
+
   constructor(private httpClient: HttpClient) { }
 
   ngOnInit(): void {
-    this.httpClient.get('/api/companies').subscribe(r => {
-      console.log(r);
+    this.httpClient.get<PageModel<CompanyModel>>('/api/companies').subscribe(r => {
+      this.tableData = r;
     })
   }
 
