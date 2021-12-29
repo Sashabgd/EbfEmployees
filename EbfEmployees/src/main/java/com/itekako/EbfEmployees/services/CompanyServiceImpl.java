@@ -94,9 +94,13 @@ public class CompanyServiceImpl implements CompanyService{
     @Transactional(isolation = Isolation.READ_COMMITTED)
     @Retryable(value = CannotAcquireLockException.class,backoff = @Backoff(delay = 100),maxAttempts = 15)
     public CompanySalaryStats getAvgSalary(Long id) throws ResourceNotFoundException {
+        Optional<Company> company = companiesRepository.findById(id);
         Optional<CompanySalaryStats> avgSalaryForCompany = companyStatisticsRepository.getAvgSalaryForCompany(id);
-        if(avgSalaryForCompany.isEmpty()){
+        if(company.isEmpty()){
             throw new ResourceNotFoundException(String.format("Company with id %o does not exist!",id));
+        }
+        if(avgSalaryForCompany.isEmpty()){
+            return new CompanySalaryStats().setAvgSalary(0).setName(company.get().getName()).setId(company.get().getId());
         }
         return avgSalaryForCompany.get();
     }

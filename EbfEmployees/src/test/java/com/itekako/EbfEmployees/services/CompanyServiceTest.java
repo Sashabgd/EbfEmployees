@@ -134,6 +134,7 @@ public class CompanyServiceTest {
     public void getAvgSalaryForCompany() throws ResourceNotFoundException {
         CompanySalaryStats companySalaryStats = new CompanySalaryStats();
         when(companyStatisticsRepository.getAvgSalaryForCompany(any(Long.class))).thenReturn(Optional.of(companySalaryStats));
+        when(companiesRepository.findById(any(Long.class))).thenReturn(Optional.of(new Company()));
         CompanySalaryStats avgSalary = companyService.getAvgSalary(55l);
         verify(companyStatisticsRepository, times(1)).getAvgSalaryForCompany(55L);
         Assert.assertSame(companySalaryStats, avgSalary);
