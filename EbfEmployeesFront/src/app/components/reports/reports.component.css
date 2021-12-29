@@ -1,0 +1,40 @@
+mat-table  {
+  width: 100%;
+  display: table;
+}
+
+td{
+  width: auto;
+  vertical-align: middle;
+}
+.id-column{
+  width: 10%;
+}
+th{
+  vertical-align: middle;
+  font-weight: 900;
+  color: black;
+}
+
+.table-row:hover{
+  background-color: beige;
+  cursor: pointer;
+}
+
+.color-row{
+  background-color: lightblue;
+}
+
+.delete-action{
+  width: 10%;
+}
+
+.action-buttons{
+  margin: 8px;
+  padding: 8px;
+  margin-bottom: 0;
+}
+
+.min-size{
+  width: 10%;
+}
