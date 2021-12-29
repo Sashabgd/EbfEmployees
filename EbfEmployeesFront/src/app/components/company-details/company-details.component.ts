@@ -7,6 +7,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateEmployeeDialogComponent } from '../dialogs/create-employee-dialog/create-employee-dialog.component';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-company-details',
@@ -19,6 +20,8 @@ export class CompanyDetailsComponent implements OnInit {
   public id!: number;
 
   displayedColumns: string[] = ['id', 'name', 'surname', 'email', 'address', 'company', 'salary', 'delete'];
+  private size = 10;
+  private index = 0;
 
   public company!: CompanySalaryModel;
   public employees!: PageModel<EmployeeModel>;
@@ -41,7 +44,7 @@ export class CompanyDetailsComponent implements OnInit {
   }
 
   private loadEmployees() {
-    this.httpClient.get<PageModel<EmployeeModel>>(`/api/companies/${this.id}/employees`)
+    this.httpClient.get<PageModel<EmployeeModel>>(`/api/companies/${this.id}/employees?size=${this.size}&page=${this.index}`)
       .subscribe({
         next: (employees) => {
           this.employees = employees;
@@ -94,14 +97,20 @@ export class CompanyDetailsComponent implements OnInit {
     this.route.navigate([`/employee/${employee.id}`]);
   }
 
-  public generateEmployees():void{
-    this.httpClient.post(`/api/companies/generate/${this.id}/employees`,null).subscribe({
-      next:()=>{
+  public generateEmployees(): void {
+    this.httpClient.post(`/api/companies/generate/${this.id}/employees`, null).subscribe({
+      next: () => {
         this.loadCompanyDetails();
       },
-      error:e=>{
-        this.snackbar.open(e.message,"OK",{duration:2000});
+      error: e => {
+        this.snackbar.open(e.message, "OK", { duration: 2000 });
       }
     })
+  }
+
+  public pageEvent(pageEvent: PageEvent) {
+    this.size = pageEvent.pageSize;
+    this.index = pageEvent.pageIndex;
+    this.loadEmployees();
   }
 }

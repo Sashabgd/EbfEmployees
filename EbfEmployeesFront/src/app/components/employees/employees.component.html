@@ -44,6 +44,7 @@
           'color-row': i % 2 == 0
         }" (click)="openEmployeeDetail(row)"></tr>
       </mat-table>
+      <mat-paginator (page)="pageEvent($event)" [length]="this.employees.totalElements" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page"></mat-paginator>
     </mat-card-content>
   </mat-card>
 </ng-container>

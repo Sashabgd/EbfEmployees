@@ -4,8 +4,10 @@
       Actions
     </mat-card-title>
     <mat-card-content>
-      <button class="action-buttons" mat-flat-button color="primary" (click)="createCompany()">Create new company</button>
-      <button class="action-buttons" mat-flat-button color="primary" (click)="generateCompanies()">Generate companies</button>
+      <button class="action-buttons" mat-flat-button color="primary" (click)="createCompany()">Create new
+        company</button>
+      <button class="action-buttons" mat-flat-button color="primary" (click)="generateCompanies()">Generate
+        companies</button>
     </mat-card-content>
   </mat-card>
   <mat-card>
@@ -25,7 +27,8 @@
         <ng-container matColumnDef="delete">
           <th mat-header-cell *matHeaderCellDef class="delete-action"> Delete </th>
           <td mat-cell mat-cell-cell *matCellDef="let element">
-            <mat-icon style="color: red;" (click)="deleteCompany(element);$event.stopPropagation()">delete_forever</mat-icon>
+            <mat-icon style="color: red;" (click)="deleteCompany(element);$event.stopPropagation()">delete_forever
+            </mat-icon>
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -33,6 +36,7 @@
           'color-row': i % 2 == 0
         }" (click)="openCompanyDetail(row)"></tr>
       </mat-table>
+      <mat-paginator (page)="pageEvent($event)" [length]="this.tableData.totalElements" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page"></mat-paginator>
     </mat-card-content>
   </mat-card>
 </ng-container>

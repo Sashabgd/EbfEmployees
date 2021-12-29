@@ -7,6 +7,7 @@ import { CompanyModel } from 'src/app/models/company.model';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { pipe } from 'rxjs';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-companies',
@@ -17,6 +18,8 @@ export class CompaniesComponent implements OnInit {
 
   public tableData!: PageModel<CompanyModel>;
   displayedColumns: string[] = ['id', 'name', 'delete'];
+  private size = 10;
+  private index = 0;
 
   constructor(private httpClient: HttpClient, private snackBar: MatSnackBar, private router: Router, private dialog: MatDialog) { }
 
@@ -36,7 +39,7 @@ export class CompaniesComponent implements OnInit {
   }
 
   private loadCompanies(): void {
-    this.httpClient.get<PageModel<CompanyModel>>('/api/companies').subscribe(r => {
+    this.httpClient.get<PageModel<CompanyModel>>(`/api/companies?size=${this.size}&page=${this.index}`).subscribe(r => {
       this.tableData = r;
     })
   }
@@ -63,5 +66,12 @@ export class CompaniesComponent implements OnInit {
         this.loadCompanies();
       }
     })
+  }
+
+
+  public pageEvent(pageEvent: PageEvent) {
+    this.size = pageEvent.pageSize;
+    this.index = pageEvent.pageIndex;
+    this.loadCompanies();
   }
 }

@@ -7,7 +7,7 @@ export class PageModel<T>{
     public number:number,
     public numberOfElements:number,
     public size:number,
-    public totalElemets:number,
+    public totalElements:number,
     public totalPages:number) {
 
   }
