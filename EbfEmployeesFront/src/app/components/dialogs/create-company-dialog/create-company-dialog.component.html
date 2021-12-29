@@ -1,0 +1,8 @@
+<ng-container>
+  <form [formGroup]="createCompanyForm" (ngSubmit)="createCompany()">
+    <mat-form-field>
+      <input matInput type="text" formControlName="name" placeholder="Company name">
+    </mat-form-field>
+    <button type="submit" mat-flat-button color="primary">Create company</button>
+  </form>
+</ng-container>

@@ -25,7 +25,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input'
 import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatTableModule } from '@angular/material/table'
-import { MatIconModule } from '@angular/material/icon'
+import { MatIconModule } from '@angular/material/icon';
+import { CompanyDetailsComponent } from './components/company-details/company-details.component';
+import { CreateCompanyDialogComponent } from './components/dialogs/create-company-dialog/create-company-dialog.component';
+import { CreateEmployeeDialogComponent } from './components/dialogs/create-employee-dialog/create-employee-dialog.component'
 
 @NgModule({
   declarations: [
@@ -35,7 +38,10 @@ import { MatIconModule } from '@angular/material/icon'
     CompaniesComponent,
     ReportsComponent,
     EmployeesComponent,
-    LoginDialogComponent
+    LoginDialogComponent,
+    CompanyDetailsComponent,
+    CreateCompanyDialogComponent,
+    CreateEmployeeDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -60,7 +66,9 @@ import { MatIconModule } from '@angular/material/icon'
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true }],
   bootstrap: [AppComponent],
   entryComponents: [
-    LoginDialogComponent
+    LoginDialogComponent,
+    CreateCompanyDialogComponent,
+    CreateEmployeeDialogComponent
   ]
 })
 export class AppModule { }
