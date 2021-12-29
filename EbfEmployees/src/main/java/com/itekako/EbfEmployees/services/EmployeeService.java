@@ -16,4 +16,6 @@ public interface EmployeeService {
     Employee updateEmployee(Long employeeId, EmployeeDetails employeeDetails) throws ResourceNotFoundException;
 
     void deleteEmployee(Long id) throws ResourceNotFoundException;
+
+    void generateEmployees(Long id) throws ResourceNotFoundException;
 }

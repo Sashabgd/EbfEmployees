@@ -95,4 +95,24 @@ public class EmployeeServiceImpl implements EmployeeService{
                 () -> new ResourceNotFoundException(String.format("Employee with id %o does not exist!", id)));
         employeesRepository.delete(employee);
     }
+
+    @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Retryable(value = CannotAcquireLockException.class, backoff = @Backoff(delay = 100), maxAttempts = 15)
+    public void generateEmployees(Long id) throws ResourceNotFoundException {
+        Optional<Company> company = companiesRepository.findById(id);
+        if (company.isEmpty()) {
+            throw new ResourceNotFoundException(String.format("Company with id %o does not exist!", id));
+        }
+        for (int i = 1; i < 102; i++) {
+            Employee employee = new Employee()
+                    .setAddress("Address "+i)
+                    .setSalary(i)
+                    .setName("Name "+i)
+                    .setEmail(String.format("email%s@%s.com",i,company.get().getName()))
+                    .setSurname("Surname "+i)
+                    .setCompany(company.get());
+            employeesRepository.save(employee);
+        }
+    }
 }

@@ -24,4 +24,6 @@ public interface CompanyService {
     CompanySalaryStats getAvgSalary(Long id) throws ResourceNotFoundException;
 
     Page<CompanySalaryStats> getCompaniesAvgSalary(Pageable pageable);
+
+    void generateCompanies();
 }

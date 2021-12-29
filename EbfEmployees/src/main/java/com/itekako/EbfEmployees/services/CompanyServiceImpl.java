@@ -109,4 +109,15 @@ public class CompanyServiceImpl implements CompanyService{
     public Page<CompanySalaryStats> getCompaniesAvgSalary(Pageable pageable) {
         return companyStatisticsRepository.getCompaniesAvgSalary(pageable);
     }
+
+    @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Retryable(value = CannotAcquireLockException.class,backoff = @Backoff(delay = 100),maxAttempts = 15)
+    public void generateCompanies() {
+        for(int i=0;i<102;i++){
+            Company company = new Company()
+                    .setName("Company "+i);
+            companiesRepository.save(company);
+        }
+    }
 }

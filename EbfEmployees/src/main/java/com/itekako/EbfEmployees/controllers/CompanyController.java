@@ -3,6 +3,7 @@ package com.itekako.EbfEmployees.controllers;
 import com.itekako.EbfEmployees.Dtos.CompanyDetails;
 import com.itekako.EbfEmployees.exceptions.ResourceNotFoundException;
 import com.itekako.EbfEmployees.services.CompanyService;
+import com.itekako.EbfEmployees.services.EmployeeService;
 import lombok.Data;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
@@ -21,6 +22,7 @@ import javax.validation.constraints.NotNull;
 @Data
 public class CompanyController {
     private final CompanyService companyService;
+    private final EmployeeService employeeService;
 
     @GetMapping
     @PageableAsQueryParam
@@ -68,5 +70,17 @@ public class CompanyController {
     @PageableAsQueryParam
     public ResponseEntity getCompaniesAvgSalary(@ParameterObject Pageable pageable){
         return ResponseEntity.ok(companyService.getCompaniesAvgSalary(pageable));
+    }
+
+    @PostMapping("/generate")
+    public ResponseEntity generateCompanies(){
+        companyService.generateCompanies();
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/generate/{id}/employees")
+    public ResponseEntity generateEmployees(@PathVariable Long id) throws ResourceNotFoundException {
+        employeeService.generateEmployees(id);
+        return ResponseEntity.noContent().build();
     }
 }
