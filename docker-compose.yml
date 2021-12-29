@@ -29,3 +29,11 @@ services:
     container_name: auth
     ports:
       - "8088:8088"
+
+  front:
+    image: 'sashabn/ebf_front:last'
+    container_name: ebf_front
+    ports:
+      - "80:80"
+    depends_on:
+      - ebf_employees
