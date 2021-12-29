@@ -24,3 +24,7 @@ th{
 .color-row{
   background-color: lightblue;
 }
+
+.delete-action{
+  width: 10%;
+}
