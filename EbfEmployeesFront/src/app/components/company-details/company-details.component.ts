@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CompanySalaryModel } from './../../models/company-salary.model';
 import { HttpClient } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateEmployeeDialogComponent } from '../dialogs/create-employee-dialog/create-employee-dialog.component';
 
@@ -18,7 +18,7 @@ export class CompanyDetailsComponent implements OnInit {
   @Input("id")
   public id!: number;
 
-  displayedColumns: string[] = ['id', 'name', 'surname', 'email', 'address', 'company', 'salary','delete'];
+  displayedColumns: string[] = ['id', 'name', 'surname', 'email', 'address', 'company', 'salary', 'delete'];
 
   public company!: CompanySalaryModel;
   public employees!: PageModel<EmployeeModel>;
@@ -26,7 +26,8 @@ export class CompanyDetailsComponent implements OnInit {
   constructor(private httpClient: HttpClient,
     private snackbar: MatSnackBar,
     private activatedRoute: ActivatedRoute,
-    private dialog: MatDialog) {
+    private dialog: MatDialog,
+    private route: Router) {
     this.activatedRoute.params.subscribe(p => {
       if (p['id']) {
         this.id = p['id'];
@@ -90,6 +91,6 @@ export class CompanyDetailsComponent implements OnInit {
   }
 
   public openEmployeeDetail(employee: EmployeeModel) {
-
+    this.route.navigate([`/employee/${employee.id}`]);
   }
 }

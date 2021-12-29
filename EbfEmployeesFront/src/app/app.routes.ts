@@ -1,3 +1,4 @@
+import { EmployeeDetailsComponent } from './components/employee-details/employee-details.component';
 import { CompanyDetailsComponent } from './components/company-details/company-details.component';
 import { EmployeesComponent } from './components/employees/employees.component';
 import { ReportsComponent } from './components/reports/reports.component';
@@ -12,7 +13,8 @@ export const appRoutes: Routes = [
       { path: 'companies', component: CompaniesComponent },
       { path: 'reports', component: ReportsComponent },
       { path: 'employees', component: EmployeesComponent },
-      { path: 'company/:id', component: CompanyDetailsComponent }
+      { path: 'company/:id', component: CompanyDetailsComponent },
+      { path: 'employee/:id', component: EmployeeDetailsComponent }
     ]
   },
   { path: 'login', component: LoginComponent }

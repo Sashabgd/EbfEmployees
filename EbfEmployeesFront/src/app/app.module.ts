@@ -28,7 +28,8 @@ import { MatTableModule } from '@angular/material/table'
 import { MatIconModule } from '@angular/material/icon';
 import { CompanyDetailsComponent } from './components/company-details/company-details.component';
 import { CreateCompanyDialogComponent } from './components/dialogs/create-company-dialog/create-company-dialog.component';
-import { CreateEmployeeDialogComponent } from './components/dialogs/create-employee-dialog/create-employee-dialog.component'
+import { CreateEmployeeDialogComponent } from './components/dialogs/create-employee-dialog/create-employee-dialog.component';
+import { EmployeeDetailsComponent } from './components/employee-details/employee-details.component'
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { CreateEmployeeDialogComponent } from './components/dialogs/create-emplo
     LoginDialogComponent,
     CompanyDetailsComponent,
     CreateCompanyDialogComponent,
-    CreateEmployeeDialogComponent
+    CreateEmployeeDialogComponent,
+    EmployeeDetailsComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,28 @@
+<ng-container *ngIf="this.employee">
+<mat-card>
+  <mat-card-title>
+    {{this.employee.company.name}} - {{this.employee.name}} {{this.employee.surname}}
+  </mat-card-title>
+  <mat-card-content>
+    <mat-form-field>
+      <input type="text" name="fname" matInput placeholder="Name" [value]="this.employee.name">
+    </mat-form-field>
+    <mat-form-field>
+      <input type="text" name="lname" matInput placeholder="Surname" [value]="this.employee.surname">
+    </mat-form-field>
+    <mat-form-field>
+      <input type="email" name="email" matInput placeholder="Email" [value]="this.employee.email">
+    </mat-form-field>
+    <mat-form-field>
+      <input type="text" name="address" matInput placeholder="Address" [value]="this.employee.address">
+    </mat-form-field>
+    <mat-form-field>
+      <input type="number" matInput placeholder="Salary" [value]="this.employee.salary">
+    </mat-form-field>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-flat-button color="primary">Update</button>
+  </mat-card-actions>
+</mat-card>
+
+</ng-container>
