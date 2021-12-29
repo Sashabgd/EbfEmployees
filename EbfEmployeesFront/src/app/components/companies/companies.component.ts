@@ -56,4 +56,12 @@ export class CompaniesComponent implements OnInit {
       }
     })
   }
+
+  public generateCompanies():void{
+    this.httpClient.post("/api/companies/generate",null).subscribe({
+      next:()=>{
+        this.loadCompanies();
+      }
+    })
+  }
 }

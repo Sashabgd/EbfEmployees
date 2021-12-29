@@ -93,4 +93,15 @@ export class CompanyDetailsComponent implements OnInit {
   public openEmployeeDetail(employee: EmployeeModel) {
     this.route.navigate([`/employee/${employee.id}`]);
   }
+
+  public generateEmployees():void{
+    this.httpClient.post(`/api/companies/generate/${this.id}/employees`,null).subscribe({
+      next:()=>{
+        this.loadCompanyDetails();
+      },
+      error:e=>{
+        this.snackbar.open(e.message,"OK",{duration:2000});
+      }
+    })
+  }
 }
