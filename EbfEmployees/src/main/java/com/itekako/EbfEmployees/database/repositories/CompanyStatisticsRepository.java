@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface CompanyStatisticsRepository extends JpaRepository<CompanySalaryStats, Serializable> {
-    @Query(value = "select c.id,c.name,AVG(e.salary) as avg_salary from companies c join employees e on e.company_id = c.id group by c.id",
+    @Query(value = "select c.id,c.name,COALESCE(AVG(e.salary),0) as avg_salary from companies c left join employees e on e.company_id = c.id group by c.id",
     countQuery = "select COUNT(*) from companies",
     nativeQuery = true)
     Page<CompanySalaryStats> getCompaniesAvgSalary(Pageable pageable);
