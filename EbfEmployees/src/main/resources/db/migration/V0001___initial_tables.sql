@@ -10,6 +10,6 @@ create table employees(
     email text not null UNIQUE,
     address text not null,
     salary decimal not null,
-    company_id bigint references companies(id) not null,
+    company_id bigint references companies(id) on delete cascade not null,
     constraint salary_nonnegative check (salary > 0)
 );
