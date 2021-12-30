@@ -1,4 +1,4 @@
-<ng-container *ngIf="this.tableData && !this.tableData.empty">
+<ng-container>
   <mat-card>
     <mat-card-title>
       Actions
@@ -14,7 +14,7 @@
     <mat-card-title>
       Companies
     </mat-card-title>
-    <mat-card-content>
+    <mat-card-content *ngIf="this.tableData && !this.tableData.empty">
       <mat-table [dataSource]="this.tableData.content" class="mat-elevation-z8">
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef class="id-column"> Id </th>
