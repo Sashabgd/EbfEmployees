@@ -109,7 +109,7 @@ public class EmployeeServiceImpl implements EmployeeService{
                     .setAddress("Address "+i)
                     .setSalary(i)
                     .setName("Name "+i)
-                    .setEmail(String.format("email%s@%s.com",i,company.get().getName()))
+                    .setEmail(String.format("email%s@%s.com",i,company.get().getName().replaceAll("\\s+","")))
                     .setSurname("Surname "+i)
                     .setCompany(company.get());
             employeesRepository.save(employee);
