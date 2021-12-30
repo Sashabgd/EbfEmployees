@@ -3,6 +3,8 @@ package com.itekako.EbfEmployees.database.models;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -17,7 +19,8 @@ public class Employee {
     private long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "company_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "company_id",referencedColumnName = "id",nullable = false)
     private Company company;
 
     @Column(nullable = false)
