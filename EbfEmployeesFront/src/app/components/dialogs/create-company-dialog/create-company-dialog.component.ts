@@ -33,7 +33,7 @@ export class CreateCompanyDialogComponent implements OnInit {
             this.dialogRef.close(true);
           },
           error:(e)=>{
-            this.snackbar.open(e.message,"OK",{duration:2000});
+            this.snackbar.open(e.error.message,"OK",{duration:2000});
           }
         }
       )

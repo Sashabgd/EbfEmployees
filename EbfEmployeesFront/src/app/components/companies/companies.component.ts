@@ -33,7 +33,7 @@ export class CompaniesComponent implements OnInit {
         this.loadCompanies();
       },
       error: (e) => {
-        this.snackBar.open("Error deleting company", "OK", { duration: 2000 });
+        this.snackBar.open(e.error.message, "OK", { duration: 2000 });
       }
     });
   }
@@ -64,6 +64,9 @@ export class CompaniesComponent implements OnInit {
     this.httpClient.post("/api/companies/generate",null).subscribe({
       next:()=>{
         this.loadCompanies();
+      },
+      error:e=>{
+        this.snackBar.open(e.error.message,"OK",{duration:2000});
       }
     })
   }

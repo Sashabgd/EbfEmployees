@@ -56,7 +56,7 @@ export class EmployeeDetailsComponent implements OnInit {
             this.employeeForm.controls['salary'].setValue(e.salary);
           },
           error: (e) => {
-            this.snackBar.open(e.message, "OK", { duration: 2000 });
+            this.snackBar.open(e.error.message, "OK", { duration: 2000 });
           }
         })
     }
@@ -79,7 +79,7 @@ export class EmployeeDetailsComponent implements OnInit {
         this.loadEmployee();
       },
       error: (e) => {
-        this.snackBar.open(e.message, "OK", { duration: 2000 });
+        this.snackBar.open(e.error.message, "OK", { duration: 2000 });
       }
     })
   }

@@ -35,7 +35,7 @@ export class EmployeesComponent implements OnInit {
           this.loadEmployees();
         },
         error: (e) => {
-          this.snackbar.open(e.message, "OK", { duration: 2000 });
+          this.snackbar.open(e.error.message, "OK", { duration: 2000 });
         }
       })
   }
@@ -51,7 +51,7 @@ export class EmployeesComponent implements OnInit {
           this.employees = employees;
         },
         error: (e) => {
-          this.snackbar.open(e.message, "OK", { duration: 2000 });
+          this.snackbar.open(e.error.message, "OK", { duration: 2000 });
         }
       })
   }

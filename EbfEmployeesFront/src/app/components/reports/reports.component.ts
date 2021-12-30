@@ -30,9 +30,6 @@ export class ReportsComponent implements OnInit {
     this.httpClient.delete(`/api/companies/${company.id}`).subscribe({
       next: () => {
         this.loadCompanies();
-      },
-      error: () => {
-        this.snackBar.open("Error deleting company", "OK", { duration: 2000 });
       }
     });
   }

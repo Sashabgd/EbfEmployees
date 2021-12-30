@@ -50,7 +50,7 @@ export class CompanyDetailsComponent implements OnInit {
           this.employees = employees;
         },
         error: (e) => {
-          this.snackbar.open(e.message, "OK", { duration: 2000 });
+          this.snackbar.open(e.error.message, "OK", { duration: 2000 });
         }
       })
   }
@@ -63,7 +63,7 @@ export class CompanyDetailsComponent implements OnInit {
           this.loadEmployees();
         },
         error: (error) => {
-          this.snackbar.open(error.message, "OK", { duration: 2000 });
+          this.snackbar.open(error.error.message, "OK", { duration: 2000 });
         }
       })
   }
@@ -88,7 +88,7 @@ export class CompanyDetailsComponent implements OnInit {
           this.loadCompanyDetails();
         },
         error: (e) => {
-          this.snackbar.open(e.message, "OK", { duration: 2000 });
+          this.snackbar.open(e.error.message, "OK", { duration: 2000 });
         }
       })
   }
@@ -103,7 +103,7 @@ export class CompanyDetailsComponent implements OnInit {
         this.loadCompanyDetails();
       },
       error: e => {
-        this.snackbar.open(e.message, "OK", { duration: 2000 });
+        this.snackbar.open(e.error.message, "OK", { duration: 2000 });
       }
     })
   }

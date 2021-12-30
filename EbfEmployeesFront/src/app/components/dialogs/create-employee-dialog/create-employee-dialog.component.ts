@@ -47,7 +47,7 @@ export class CreateEmployeeDialogComponent implements OnInit {
             this.dialogRef.close(true);
           },
           error: (e) => {
-            this.snackBar.open(e.message, "OK", { duration: 2000 });
+            this.snackBar.open(e.error.message, "OK", { duration: 2000 });
           }
         })
     } else {
