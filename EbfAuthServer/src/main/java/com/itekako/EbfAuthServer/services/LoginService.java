@@ -35,7 +35,7 @@ public class LoginService {
 
     public String generateAccessToken(String username,String role) {
         return JWT.create().withSubject(String.valueOf(username))
-                .withClaim("ROLE", role.toLowerCase())
+                .withClaim("COMPANY", role.toLowerCase())
                 .withExpiresAt(new Date(System.currentTimeMillis() + authConfiguration.getLifeTime()))
                 .sign(Algorithm.HMAC512(authConfiguration.getSecret().getBytes()));
     }

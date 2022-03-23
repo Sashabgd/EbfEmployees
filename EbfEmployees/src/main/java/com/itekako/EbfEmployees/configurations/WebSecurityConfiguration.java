@@ -23,7 +23,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/swagger-ui.html", "/api-docs/**", "/webjars/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll() //allow swagger
-                .antMatchers("/api/**").hasRole("admin").anyRequest().authenticated()
+                .antMatchers("/api/**").authenticated()
                 .and().csrf().disable().cors()
                 .and().addFilter(new JwtFilter(authenticationManager(), authConfiguration));
     }

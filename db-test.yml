@@ -1,0 +1,25 @@
+version: '2'
+
+services:
+
+  db1:
+    image: 'postgres:13.1-alpine'
+    container_name: db1
+    environment:
+      - POSTGRES_DB=ebf_employees1
+      - POSTGRES_USER=ebf_db_user1
+      - POSTGRES_PASSWORD=ebf_db_password1
+      - APP_DB_NAME=ebf_employees1
+    ports:
+      - "54322:5432"
+
+  db2:
+    image: 'postgres:13.1-alpine'
+    container_name: db2
+    environment:
+      - POSTGRES_DB=ebf_employees2
+      - POSTGRES_USER=ebf_db_user2
+      - POSTGRES_PASSWORD=ebf_db_password2
+      - APP_DB_NAME=ebf_employees2
+    ports:
+      - "5432:5432"
