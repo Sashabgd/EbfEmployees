@@ -32,6 +32,7 @@ public class MapMultiTenantConnectionProvider extends AbstractMultiTenantConnect
     protected ConnectionProvider selectConnectionProvider(String s) {
         return connectionProviderMap.get(s);
     }
+
     private void initConnectionProviderForTenant(String tenantId)
             throws IOException {
         Properties properties = new Properties();

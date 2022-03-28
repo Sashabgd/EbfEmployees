@@ -1,4 +1,6 @@
 <mat-toolbar class="header">
   <img [routerLink]="'/'" src="https://ebf.com/wp-content/uploads/2018/11/ebf-logo-typography.png">
+  <button (click)="selectDatabase('admin')">Database1</button>
+  <button (click)="selectDatabase('user')">Database2</button>
 </mat-toolbar>
 <router-outlet></router-outlet>

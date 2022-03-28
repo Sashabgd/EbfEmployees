@@ -1,5 +1,6 @@
 package com.itekako.EbfEmployees.configurations;
 
+import com.itekako.EbfEmployees.auth.DatabaseFilter;
 import com.itekako.EbfEmployees.auth.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +26,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/swagger-ui.html", "/api-docs/**", "/webjars/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll() //allow swagger
                 .antMatchers("/api/**").authenticated()
                 .and().csrf().disable().cors()
-                .and().addFilter(new JwtFilter(authenticationManager(), authConfiguration));
+                .and().addFilter(new JwtFilter(authenticationManager(), authConfiguration)).addFilterAfter(new DatabaseFilter(),JwtFilter.class);
     }
 
     @Bean

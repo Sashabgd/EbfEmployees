@@ -1,8 +1,11 @@
 package com.itekako.EbfEmployees.database;
 
+import com.itekako.EbfEmployees.auth.TenantAuthentificationToken;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,9 +23,11 @@ public class CurrentTenantIdentifierResolverImpl implements CurrentTenantIdentif
     public String resolveCurrentTenantIdentifier() {
         SecurityContext context = SecurityContextHolder.getContext();
         if(context.getAuthentication() == null)return "admin";
-        List<SimpleGrantedAuthority> collect = context.getAuthentication().getAuthorities().stream()
-                .map(a -> (SimpleGrantedAuthority) a).collect(Collectors.toList());
-        return collect.get(0).getAuthority().replace("ROLE_","");
+        Authentication authentication = context.getAuthentication();
+        if(authentication instanceof AnonymousAuthenticationToken){
+            return "admin";
+        }
+        return ((TenantAuthentificationToken) authentication).getDatabase();
     }
 
     @Override

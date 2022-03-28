@@ -63,7 +63,7 @@ public class JwtFilter extends BasicAuthenticationFilter {
             roles.add(new SimpleGrantedAuthority("ROLE_" + role.asString()));
         }
         SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(subject,null, roles));
+                new TenantAuthentificationToken(subject, roles));
         super.doFilterInternal(request, response, chain);
     }
 }

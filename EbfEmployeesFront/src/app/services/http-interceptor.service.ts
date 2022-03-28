@@ -1,16 +1,17 @@
 import { AccessTokenModel } from './../models/access-token.model';
 import { LoginDialogComponent } from './../components/login-dialog/login-dialog.component';
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
+import { HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { catchError, filter, Observable, switchMap, take, throwError } from "rxjs";
 import { StorageService } from "./storage.service";
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DatabaseSelectionService } from './database-selection.service';
 
 @Injectable({ providedIn: 'root' })
 export class HttpInterceptorService implements HttpInterceptor {
 
-  constructor(private storageService: StorageService, private matDialog: MatDialog, private snackBar: MatSnackBar) { }
+  constructor(private storageService: StorageService, private matDialog: MatDialog, private snackBar: MatSnackBar, private databaseSelectionService: DatabaseSelectionService) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(this.cloneRequestWithAccessToken(req)).pipe(catchError(e => {
@@ -36,13 +37,17 @@ export class HttpInterceptorService implements HttpInterceptor {
 
   cloneRequestWithAccessToken(request: HttpRequest<any>): HttpRequest<any> {
     if (this.storageService.getAccessToken() != null) {
-
+      let httph = new HttpHeaders({'Authorization': `Bearer ${this.storageService.getAccessToken()}`});
+      if(this.databaseSelectionService.getDatabase() != null){
+        let database = this.databaseSelectionService.getDatabase() as string;
+        httph = new HttpHeaders({'Authorization': `Bearer ${this.storageService.getAccessToken()}`,
+        'Selected-Database': database});
+      }
+      
       return request.clone(
         {
           withCredentials: true,
-          setHeaders: {
-            Authorization: `Bearer ${this.storageService.getAccessToken()}`
-          }
+          headers: httph
         }
       )
     } else {
