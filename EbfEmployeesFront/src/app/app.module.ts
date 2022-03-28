@@ -31,6 +31,7 @@ import { CreateCompanyDialogComponent } from './components/dialogs/create-compan
 import { CreateEmployeeDialogComponent } from './components/dialogs/create-employee-dialog/create-employee-dialog.component';
 import { EmployeeDetailsComponent } from './components/employee-details/employee-details.component'
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatSnackBarModule,
     MatTableModule,
     MatIconModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatSortModule
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true }],
   bootstrap: [AppComponent],
